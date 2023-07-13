@@ -68,17 +68,17 @@ app.use(cors());
 // check if public/uploads folder exists and if not create it
 const uploadsFolder = "./public/uploads"
 if (!fs.existsSync(uploadsFolder)) {
-    fs.mkdirSync(uploadsFolder);
+    fs.mkdirSync(uploadsFolder, { recursive: true });
 }
 // check if public/uploads/pictures folder exists and if not create it
 const picturesFolder = "./public/uploads/pictures"
 if (!fs.existsSync(picturesFolder)) {
-    fs.mkdirSync(picturesFolder);
+    fs.mkdirSync(picturesFolder, { recursive: true });
 }
 // check if public/uploads/cvs folder exists and if not create it
 const cvsFolder = "./public/uploads/cvs"
 if (!fs.existsSync(cvsFolder)) {
-    fs.mkdirSync(cvsFolder);
+    fs.mkdirSync(cvsFolder, { recursive: true });
 }
 
 const storage = multer.diskStorage({
