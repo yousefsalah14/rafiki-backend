@@ -66,17 +66,17 @@ app.use(express.static('public'));
 app.use(cors());
 
 // check if public/uploads folder exists and if not create it
-const uploadsFolder = path.join(__dirname, 'public', 'uploads');
+const uploadsFolder = "./public/uploads"
 if (!fs.existsSync(uploadsFolder)) {
     fs.mkdirSync(uploadsFolder);
 }
 // check if public/uploads/pictures folder exists and if not create it
-const picturesFolder = path.join(__dirname, 'public', 'uploads', 'pictures');
+const picturesFolder = "./public/uploads/pictures"
 if (!fs.existsSync(picturesFolder)) {
     fs.mkdirSync(picturesFolder);
 }
 // check if public/uploads/cvs folder exists and if not create it
-const cvsFolder = path.join(__dirname, 'public', 'uploads', 'cvs');
+const cvsFolder = "./public/uploads/cvs"
 if (!fs.existsSync(cvsFolder)) {
     fs.mkdirSync(cvsFolder);
 }
