@@ -1,10 +1,6 @@
 FROM node:20.4.0
 
-ENV DB_PORT=3306
-ENV DB_USER_NAME=id20619513_alumnidb
-ENV DB_PASSWORD=Alumnai_pwd23
-ENV DB_NAME=alumnaidb
-ENV DB_HOST=alumnaimysql.mysql.database.azure.com
+
 # Set the working directory in the container
 WORKDIR /usr/src/app
 

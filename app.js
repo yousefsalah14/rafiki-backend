@@ -66,17 +66,17 @@ app.use(express.static('public'));
 app.use(cors());
 
 // check if public/uploads folder exists and if not create it
-const uploadsFolder = "./public/uploads"
+const uploadsFolder = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadsFolder)) {
     fs.mkdirSync(uploadsFolder, { recursive: true });
 }
 // check if public/uploads/pictures folder exists and if not create it
-const picturesFolder = "./public/uploads/pictures"
+const picturesFolder = path.join(__dirname, 'public', 'uploads', 'pictures');
 if (!fs.existsSync(picturesFolder)) {
     fs.mkdirSync(picturesFolder, { recursive: true });
 }
 // check if public/uploads/cvs folder exists and if not create it
-const cvsFolder = "./public/uploads/cvs"
+const cvsFolder = path.join(__dirname, 'public', 'uploads', 'cvs');
 if (!fs.existsSync(cvsFolder)) {
     fs.mkdirSync(cvsFolder, { recursive: true });
 }
@@ -84,10 +84,10 @@ if (!fs.existsSync(cvsFolder)) {
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         if (file.fieldname === 'picture') {
-            cb(null, 'public/uploads/pictures');
+            cb(null, path.join(__dirname, 'public', 'uploads', 'pictures'));
         }
         else if (file.fieldname === 'cv') {
-            cb(null, 'public/uploads/cvs');
+            cb(null, path.join(__dirname, 'public', 'uploads', 'cvs'));
         }
     },
     filename: function (req, file, cb) {
