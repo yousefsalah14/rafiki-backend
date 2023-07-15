@@ -1,7 +1,8 @@
 const { DataTypes, Model } = require("sequelize");
 const db = require("../config/db_config");
 const Roles = require("./Role");
-
+const Skills = require("./Skill");
+const Users_Skills = require("./Users_Skills");
 class Users extends Model { }
 
 Users.init({
@@ -96,7 +97,18 @@ Users.init({
     tableName: 'Users',
 });
 
+Roles.hasMany(Users, {
+    foreignKey: 'Role_Id',
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE"
+});
+Users.belongsTo(Roles, {
+    foreignKey: 'Role_Id',
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE"
+});
 
-
+Users_Skills.belongsTo(Users, { foreignKey: 'User_Id', onDelete: "CASCADE" });
+Users.hasMany(Users_Skills, { foreignKey: 'User_Id', onDelete: "CASCADE" });
 
 module.exports = Users;

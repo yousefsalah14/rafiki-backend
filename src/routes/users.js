@@ -135,6 +135,26 @@ router.post('/check_user_name', async (req, res, next) => {
     }
 });
 
+router.post("/check_academic_id", async (req, res, next) => {
+    try {
+        const { Academic_Id } = req.body;
+        if (!Academic_Id) {
+            res.status(400).send({ success: false, message: 'Missing credentials.' });
+            return;
+        }
+        const exists = await user_util.checkAcademicIdExists(Academic_Id);
+        if (exists) {
+            res.status(200).send({ success: false, message: 'Academic Id exists please try another one..' });
+        }
+        else {
+            res.status(200).send({ success: true, message: 'Academic Id does not exist.' });
+        }
+    } catch (err) {
+        next(err);
+    }
+});
+
+
 // check if user is logged in
 router.get('/is_logged_in', (req, res, next) => {
     try {
@@ -372,6 +392,40 @@ router.put('/update_social_urls', isAuthorized, async (req, res, next) => {
         }
         await user_util.updateSocialUrls(User_Id, data);
         res.status(200).send({ success: true, message: 'Social URLs updated successfully.' });
+    } catch (err) {
+        next(err);
+    }
+});
+
+
+router.post("/login", async (req, res, next) => {
+    try {
+        const { UserName, Password } = req.body;
+        if (!UserName || !Password) {
+            res.status(400).send({ success: false, message: 'Missing credentials.' });
+        }
+        const user = await user_util.getUser(UserName);
+        if (!user) {
+            res.status(404).send({ success: false, message: 'User not found.' });
+        } else {
+            const isMatch = await user_util.comparePassword(Password, user.Password);
+            if (!isMatch) {
+                res.status(401).send({ success: false, message: 'Invalid credentials.' });
+            } else {
+                // console.log(user);
+                req.session.RoleName = user.Role.Role_Name;
+                req.session.IsLoggedIn = true;
+                req.session.User_Id = user.User_Id;
+                req.session.UserName = user.UserName;
+                res.status(200).send({
+                    success: true,
+                    actor: user.Role.Role_Name,
+                    user_id: user.User_Id,
+                    user_name: user.UserName,
+                    message: 'User logged in successfully.'
+                });
+            }
+        }
     } catch (err) {
         next(err);
     }

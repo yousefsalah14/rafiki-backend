@@ -209,6 +209,34 @@ const updateSocialUrls = async (User_Id, socialUrls = {
     }
 }
 
+const getUser = async (UserName) => {
+    try {
+        // get the user with the given UserName and include the Role of the user
+        const user = await User.findOne({
+            where: {
+                UserName: UserName
+            },
+            include: {
+                model: Role,
+                attributes: ['Role_Name'
+                    , 'Role_Id'
+                ]
+            }
+        });
+        return user;
+    } catch (err) {
+        throw err;
+    }
+}
+
+checkAcademicIdExists = async (Academic_Id) => {
+    try {
+        const user = await User.findOne({ where: { Academic_Id } });
+        return user !== null;
+    } catch (error) {
+        throw error;
+    }
+}
 
 module.exports = {
     addAlumni,
@@ -226,4 +254,10 @@ module.exports = {
     updateAbout,
     updateCountry,
     updateSocialUrls,
+    ALUMNI_ROLE_ID,
+    ADMIN_ROLE_ID,
+    STUDENT_ROLE_ID,
+    HR_ROLE_ID,
+    getUser,
+    checkAcademicIdExists,
 }
