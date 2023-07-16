@@ -422,6 +422,7 @@ router.post("/login", async (req, res, next) => {
                     actor: user.Role.Role_Name,
                     user_id: user.User_Id,
                     user_name: user.UserName,
+                    sessionId: req.session.id,
                     message: 'User logged in successfully.'
                 });
             }

@@ -12,6 +12,8 @@ const path = require('path');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 
+// Set middleware for CORS
+app.use(cors())
 
 db.authenticate()
     .then(() => {
@@ -53,7 +55,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 1 week
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+        httpOnly: false,
+        secure: false,
     }
 }));
 
@@ -62,8 +66,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Set middleware for serving static files
 app.use(express.static('public'));
-// Set middleware for CORS
-app.use(cors());
 
 // check if public/uploads folder exists and if not create it
 const uploadsFolder = path.join(__dirname, 'public', 'uploads');
