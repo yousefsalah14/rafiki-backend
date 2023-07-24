@@ -143,10 +143,24 @@ const getHR = async (UserName) => {
     }
 }
 
-const uploadAlumniPicture = async (User_Id, Img) => {
+const uploadPicture = async (User_Id, Img) => {
     try {
         await User.update({
             Img: Img
+        }, {
+            where: {
+                User_Id: User_Id
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+}
+
+const uploadCV = async (User_Id, CV) => {
+    try {
+        await User.update({
+            CV: CV
         }, {
             where: {
                 User_Id: User_Id
@@ -368,7 +382,7 @@ module.exports = {
     getStudent,
     addHR,
     getHR,
-    uploadAlumniPicture,
+    uploadPicture,
     updateAbout,
     updateCountry,
     updateSocialUrls,
@@ -384,4 +398,5 @@ module.exports = {
     deleteGitHub_URL,
     deleteLinkedIn_URL,
     deletePhone,
+    uploadCV,
 }

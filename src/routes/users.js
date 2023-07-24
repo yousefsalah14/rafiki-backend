@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const user_util = require('../util/user_util');
-const { isAlumni, isStudent, isHR, isAuthorized } = require('../util/Auth');
+const { isAlumni, isStudent, isHR, isAuthorized, isAlumniOrStudent } = require('../util/Auth');
 router.post('/alumni_signup', async (req, res, next) => {
     try {
         const { UserName, Password, Email, National_Id } = req.body;
@@ -351,13 +351,38 @@ router.post('/upload_picture', isAuthorized, async (req, res, next) => {
             return;
         }
         const { picture } = req.files;
+        if (!picture) {
+            res.status(400).send({ success: false, message: 'Missing credentials.' });
+            return;
+        }
         const pictureName = picture[0].filename;
-        await user_util.uploadAlumniPicture(User_Id, pictureName);
+        await user_util.uploadPicture(User_Id, pictureName);
         res.status(200).send({ success: true, message: 'Picture uploaded successfully.', Img: pictureName });
     } catch (err) {
         next(err);
     }
 });
+
+router.post('/upload_cv', isAlumniOrStudent, async (req, res, next) => {
+    try {
+        const { User_Id } = req.session;
+        if (!req.files || Object.keys(req.files).length === 0) {
+            res.status(400).send({ success: false, message: 'No files were uploaded.' });
+            return;
+        }
+        const { cv } = req.files;
+        if (!cv) {
+            res.status(400).send({ success: false, message: 'Missing credentials.' });
+            return;
+        }
+        const cvName = cv[0].filename;
+        await user_util.uploadCV(User_Id, cvName);
+        res.status(200).send({ success: true, message: 'CV uploaded successfully.', CV: cvName });
+    } catch (err) {
+        next(err);
+    }
+});
+
 
 router.put('/update_about', isAuthorized, async (req, res, next) => {
     try {
