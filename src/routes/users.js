@@ -247,6 +247,25 @@ router.get('/student_logout', isStudent, (req, res, next) => {
     }
 });
 
+router.get("/logout", isAuthorized, (req, res, next) => {
+    try {
+        req.session.destroy();
+        res.clearCookie('connect.sid');
+        const sessionId = req.body.sessionId;
+        // destroy session
+        req.sessionStore.destroy(sessionId, (err) => {
+            if (err) {
+                console.log("session err", err);
+                res.status(500).send({ success: false, message: 'Internal Server Error.' });
+            } else {
+                res.status(200).send({ success: true, message: 'User logged out successfully.' });
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.get('/get_student', isStudent, async (req, res, next) => {
     try {
         const { UserName } = req.session;
@@ -324,7 +343,7 @@ router.get('/hr_logout', isHR, (req, res, next) => {
 });
 
 // upload picture
-router.post('/upload_alumni_picture', isAlumni, async (req, res, next) => {
+router.post('/upload_picture', isAuthorized, async (req, res, next) => {
     try {
         const { User_Id } = req.session;
         if (!req.files || Object.keys(req.files).length === 0) {
@@ -333,9 +352,8 @@ router.post('/upload_alumni_picture', isAlumni, async (req, res, next) => {
         }
         const { picture } = req.files;
         const pictureName = picture[0].filename;
-        console.log(pictureName);
         await user_util.uploadAlumniPicture(User_Id, pictureName);
-        res.status(200).send({ success: true, message: 'Picture uploaded successfully.' });
+        res.status(200).send({ success: true, message: 'Picture uploaded successfully.', Img: pictureName });
     } catch (err) {
         next(err);
     }
@@ -431,6 +449,19 @@ router.post("/login", async (req, res, next) => {
         next(err);
     }
 });
+
+router.get('/fetch_cookie', (req, res, next) => {
+    try {
+        // extract cookie from request
+        console.log('Cookies: ')
+        console.log(req.cookies);
+        console.log('Signed Cookies: ', req.signedCookies)
+        res.status(200).send({ success: true, message: 'Cookie fetched successfully.', cookie: req.cookies });
+    } catch (err) {
+        next(err);
+    }
+});
+
 
 
 module.exports = router;

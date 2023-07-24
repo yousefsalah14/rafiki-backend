@@ -1,7 +1,6 @@
 const { DataTypes, Model } = require("sequelize");
 const db = require("../config/db_config");
 const Roles = require("./Role");
-const Skills = require("./Skill");
 const Users_Skills = require("./Users_Skills");
 class Users extends Model { }
 
@@ -28,6 +27,9 @@ Users.init({
         type: DataTypes.STRING,
     },
     LastName: {
+        type: DataTypes.STRING,
+    },
+    Phone: {
         type: DataTypes.STRING,
     },
     Role_Id: {
@@ -91,6 +93,7 @@ Users.init({
     GitHub_URL: {
         type: DataTypes.STRING,
     },
+
 }, {
     sequelize: db,
     modelName: 'Users',
