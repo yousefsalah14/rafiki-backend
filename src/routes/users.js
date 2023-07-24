@@ -462,6 +462,65 @@ router.get('/fetch_cookie', (req, res, next) => {
     }
 });
 
+router.delete('/delete_profile_picture', isAuthorized, async (req, res, next) => {
+    try {
+        const { User_Id } = req.session;
+        await user_util.deleteProfilePicture(User_Id);
+        res.status(200).send({ success: true, message: 'Profile picture deleted successfully.' });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete('/delete_behance_url', isAuthorized, async (req, res, next) => {
+    try {
+        const { User_Id } = req.session;
+        await user_util.deleteBehance_URL(User_Id);
+        res.status(200).send({ success: true, message: 'Behance URL deleted successfully.' });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete('/delete_github_url', isAuthorized, async (req, res, next) => {
+    try {
+        const { User_Id } = req.session;
+        await user_util.deleteGitHub_URL(User_Id);
+        res.status(200).send({ success: true, message: 'GitHub URL deleted successfully.' });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete('/delete_linkedin_url', isAuthorized, async (req, res, next) => {
+    try {
+        const { User_Id } = req.session;
+        await user_util.deleteLinkedIn_URL(User_Id);
+        res.status(200).send({ success: true, message: 'LinkedIn URL deleted successfully.' });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete('/delete_about', isAuthorized, async (req, res, next) => {
+    try {
+        const { User_Id } = req.session;
+        await user_util.deleteAbout(User_Id);
+        res.status(200).send({ success: true, message: 'About deleted successfully.' });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete('/delete_phone', isAuthorized, async (req, res, next) => {
+    try {
+        const { User_Id } = req.session;
+        await user_util.deletePhone(User_Id);
+        res.status(200).send({ success: true, message: 'Phone deleted successfully.' });
+    } catch (err) {
+        next(err);
+    }
+});
 
 
 module.exports = router;

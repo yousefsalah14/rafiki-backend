@@ -1,6 +1,9 @@
 const User = require("../models/User");
 const Role = require("../models/Role");
 const bcrypt = require("bcryptjs");
+const path = require('path');
+const fs = require('fs');
+
 
 const ALUMNI_ROLE_ID = 1;
 const ADMIN_ROLE_ID = 2;
@@ -188,9 +191,9 @@ const updateSocialUrls = async (User_Id, socialUrls = {
     GitHub_URL: ""
 }) => {
     let defaultObject = {
-        Behance_URL: "",
-        LinkedIn_URL: "",
-        GitHub_URL: ""
+        Behance_URL: null,
+        LinkedIn_URL: null,
+        GitHub_URL: null
     }
     // merge the two objects
     let merged = { ...defaultObject, ...socialUrls };
@@ -229,7 +232,7 @@ const getUser = async (UserName) => {
     }
 }
 
-checkAcademicIdExists = async (Academic_Id) => {
+const checkAcademicIdExists = async (Academic_Id) => {
     try {
         const user = await User.findOne({ where: { Academic_Id } });
         return user !== null;
@@ -237,6 +240,121 @@ checkAcademicIdExists = async (Academic_Id) => {
         throw error;
     }
 }
+
+const deletePictureFile = async (fileName) => {
+    try {
+        const filePath = path.join(__dirname, '..', "..", 'public', 'uploads', 'pictures', fileName);
+        if (fs.existsSync(filePath))
+            fs.unlinkSync(filePath);
+    } catch (err) {
+        throw err;
+    }
+}
+
+const deleteCVFile = async (fileName) => {
+    try {
+        const filePath = path.join(__dirname, '..', "..", 'public', 'uploads', 'cvs', fileName);
+        if (fs.existsSync(filePath))
+            fs.unlinkSync(filePath);
+    } catch (err) {
+        throw err;
+    }
+}
+
+const deleteProfilePicture = async (User_Id) => {
+    try {
+        await User.findOne({
+            where: {
+                User_Id: User_Id
+            }
+        }).then(user => {
+            if (user?.Img !== null) {
+                deletePictureFile(user.Img);
+                user.Img = null;
+                user.save();
+            }
+        }).catch(err => {
+            throw err;
+        });
+
+    } catch (err) {
+        throw err;
+    }
+
+}
+const deleteAbout = async (User_Id) => {
+    try {
+        await User.update({
+            About: null
+        }, {
+            where: {
+                User_Id: User_Id
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+}
+
+const deletePhone = async (User_Id) => {
+    try {
+        await User.update({
+            Phone: null
+        }, {
+            where: {
+                User_Id: User_Id
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+}
+
+const deleteLinkedIn_URL = async (User_Id) => {
+    try {
+        await User.update({
+            LinkedIn_URL: null
+        }, {
+            where: {
+                User_Id: User_Id
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+}
+
+const deleteBehance_URL = async (User_Id) => {
+    try {
+        await User.update({
+            Behance_URL: null
+        }, {
+            where: {
+                User_Id: User_Id
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+}
+
+const deleteGitHub_URL = async (User_Id) => {
+    try {
+        await User.update({
+            GitHub_URL: null
+        }, {
+            where: {
+                User_Id: User_Id
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+
+// export the functions
 
 module.exports = {
     addAlumni,
@@ -260,4 +378,10 @@ module.exports = {
     HR_ROLE_ID,
     getUser,
     checkAcademicIdExists,
+    deleteProfilePicture,
+    deleteAbout,
+    deleteBehance_URL,
+    deleteGitHub_URL,
+    deleteLinkedIn_URL,
+    deletePhone,
 }
