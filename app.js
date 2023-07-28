@@ -120,6 +120,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', require('./src/routes/users'));
 app.use('/api/roles', require('./src/routes/roles'));
+app.use('/api/admin', require('./src/routes/admin'));
 
 // 404 middleware
 app.use((req, res, next) => {

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const user_util = require('../util/user_util');
-const { isAlumni, isStudent, isHR, isAuthorized, isAlumniOrStudent } = require('../util/Auth');
+const { isAlumni, isStudent, isHR, isAuthorized, isAlumniOrStudent, isProfessor } = require('../util/Auth');
 router.post('/alumni_signup', async (req, res, next) => {
     try {
         const { UserName, Password, Email, National_Id } = req.body;
@@ -492,6 +492,16 @@ router.delete('/delete_profile_picture', isAuthorized, async (req, res, next) =>
         const { User_Id } = req.session;
         await user_util.deleteProfilePicture(User_Id);
         res.status(200).send({ success: true, message: 'Profile picture deleted successfully.' });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete('/delete_cv', isAlumniOrStudent, async (req, res, next) => {
+    try {
+        const { User_Id } = req.session;
+        await user_util.deleteCV(User_Id);
+        res.status(200).send({ success: true, message: 'CV deleted successfully.' });
     } catch (err) {
         next(err);
     }

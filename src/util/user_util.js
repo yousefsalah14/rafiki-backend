@@ -3,12 +3,7 @@ const Role = require("../models/Role");
 const bcrypt = require("bcryptjs");
 const path = require('path');
 const fs = require('fs');
-
-
-const ALUMNI_ROLE_ID = 1;
-const ADMIN_ROLE_ID = 2;
-const STUDENT_ROLE_ID = 3;
-const HR_ROLE_ID = 4;
+const { ADMIN_ROLE_ID, ALUMNI_ROLE_ID, STUDENT_ROLE_ID, HR_ROLE_ID, PROFESSOR_ROLE_ID } = require('./util');
 
 const addAlumni = async ({ UserName, Password, Email, National_Id }) => {
     try {
@@ -34,6 +29,7 @@ const getAlumni = async (UserName) => {
                 Role_Id: ALUMNI_ROLE_ID
             }
         });
+        alumni.Password = undefined;
         return alumni;
     } catch (err) {
         throw err;
@@ -106,6 +102,7 @@ const getStudent = async (UserName) => {
                 Role_Id: STUDENT_ROLE_ID
             }
         });
+        student.Password = undefined;
         return student;
     } catch (err) {
         throw err;
@@ -137,6 +134,7 @@ const getHR = async (UserName) => {
                 Role_Id: HR_ROLE_ID
             }
         });
+        hr.Password = undefined;
         return hr;
     } catch (err) {
         throw err;
@@ -296,6 +294,27 @@ const deleteProfilePicture = async (User_Id) => {
     }
 
 }
+
+const deleteCV = async (User_Id) => {
+    try {
+        await User.findOne({
+            where: {
+                User_Id: User_Id
+            }
+        }).then(user => {
+            if (user?.CV !== null) {
+                deleteCVFile(user.CV);
+                user.CV = null;
+                user.save();
+            }
+        }).catch(err => {
+            throw err;
+        });
+    } catch (err) {
+        throw err;
+    }
+}
+
 const deleteAbout = async (User_Id) => {
     try {
         await User.update({
@@ -386,10 +405,6 @@ module.exports = {
     updateAbout,
     updateCountry,
     updateSocialUrls,
-    ALUMNI_ROLE_ID,
-    ADMIN_ROLE_ID,
-    STUDENT_ROLE_ID,
-    HR_ROLE_ID,
     getUser,
     checkAcademicIdExists,
     deleteProfilePicture,
