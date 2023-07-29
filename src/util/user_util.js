@@ -385,6 +385,19 @@ const deleteGitHub_URL = async (User_Id) => {
     }
 }
 
+const uploadPictureThumbnail = async (User_Id, ImgThumbnail) => {
+    try {
+        await User.update({
+            ImgThumbnail: ImgThumbnail
+        }, {
+            where: {
+                User_Id: User_Id
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+}
 
 
 // export the functions
@@ -414,4 +427,6 @@ module.exports = {
     deleteLinkedIn_URL,
     deletePhone,
     uploadCV,
+    deleteCV,
+    uploadPictureThumbnail
 }

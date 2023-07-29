@@ -1,6 +1,9 @@
 const router = require('express').Router();
 const user_util = require('../util/user_util');
 const { isAlumni, isStudent, isHR, isAuthorized, isAlumniOrStudent, isProfessor } = require('../util/Auth');
+const { encode } = require('blurhash');
+const sharp = require('sharp');
+
 router.post('/alumni_signup', async (req, res, next) => {
     try {
         const { UserName, Password, Email, National_Id } = req.body;
@@ -357,11 +360,21 @@ router.post('/upload_picture', isAuthorized, async (req, res, next) => {
         }
         const pictureName = picture[0].filename;
         await user_util.uploadPicture(User_Id, pictureName);
-        res.status(200).send({ success: true, message: 'Picture uploaded successfully.', Img: pictureName });
+        const imageBuffer = await sharp(picture[0].path).toBuffer();
+        const resizedImage = await sharp(imageBuffer).resize(300, 400).toBuffer();
+        const { width, height } = await sharp(resizedImage).metadata();
+        const rgbaPixels = await sharp(resizedImage)
+            .ensureAlpha()
+            .raw()
+            .toBuffer();
+        res.status(200).send({ success: true, message: 'Picture uploaded successfully.', Img: pictureName }).end();
+        const hash = encode(rgbaPixels, width, height, 4, 6);
+        user_util.uploadPictureThumbnail(User_Id, hash);
     } catch (err) {
         next(err);
     }
 });
+
 
 router.post('/upload_cv', isAlumniOrStudent, async (req, res, next) => {
     try {

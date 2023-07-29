@@ -57,6 +57,9 @@ Users.init({
     Img: {
         type: DataTypes.STRING,
     },
+    ImgThumbnail: {
+        type: DataTypes.STRING,
+    },
     About: {
         type: DataTypes.STRING,
     },
