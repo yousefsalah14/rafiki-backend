@@ -3,7 +3,10 @@ const Role = require("../models/Role");
 const bcrypt = require("bcryptjs");
 const path = require('path');
 const fs = require('fs');
+const { encode } = require('blurhash');
+const sharp = require('sharp');
 const { ADMIN_ROLE_ID, ALUMNI_ROLE_ID, STUDENT_ROLE_ID, HR_ROLE_ID, PROFESSOR_ROLE_ID } = require('./util');
+
 
 const addAlumni = async ({ UserName, Password, Email, National_Id }) => {
     try {
@@ -399,6 +402,22 @@ const uploadPictureThumbnail = async (User_Id, ImgThumbnail) => {
     }
 }
 
+async function processBlurhash(filePath, User_Id) {
+    try {
+        const imageBuffer = await sharp(filePath).toBuffer();
+        const { width, height } = await sharp(imageBuffer).metadata();
+        const rgbaPixels = await sharp(imageBuffer)
+            .ensureAlpha()
+            .raw()
+            .toBuffer();
+        const hash = encode(rgbaPixels, width, height, 4, 4);
+        uploadPictureThumbnail(User_Id, hash);
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 
 // export the functions
 
@@ -428,5 +447,6 @@ module.exports = {
     deletePhone,
     uploadCV,
     deleteCV,
-    uploadPictureThumbnail
+    uploadPictureThumbnail,
+    processBlurhash
 }
