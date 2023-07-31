@@ -2000,7 +2000,7 @@
 		},
 		{
 			"key": "baseUrl",
-			"value": "",
+			"value": "https://alumni-system-backend.azurewebsites.net/",
 			"type": "string"
 		}
 	]
