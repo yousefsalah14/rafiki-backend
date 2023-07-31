@@ -2,6 +2,7 @@ const { DataTypes, Model } = require("sequelize");
 const db = require("../config/db_config");
 const Roles = require("./Role");
 const Users_Skills = require("./Users_Skills");
+const Skills = require("./Skill");
 class Users extends Model { }
 
 Users.init({
@@ -34,13 +35,6 @@ Users.init({
     },
     Role_Id: {
         type: DataTypes.INTEGER,
-        references: {
-            model: Roles,
-            key: 'Role_Id'
-        }
-        ,
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE"
     },
     National_Id: {
         type: DataTypes.STRING,
@@ -103,18 +97,31 @@ Users.init({
     tableName: 'Users',
 });
 
-Roles.hasMany(Users, {
-    foreignKey: 'Role_Id',
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE"
-});
+
 Users.belongsTo(Roles, {
-    foreignKey: 'Role_Id',
+    foreignKey: "Role_Id",
     onDelete: "CASCADE",
-    onUpdate: "CASCADE"
+    onUpdate: "CASCADE",
+});
+Roles.hasMany(Users, {
+    foreignKey: "Role_Id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
 });
 
-Users_Skills.belongsTo(Users, { foreignKey: 'User_Id', onDelete: "CASCADE" });
-Users.hasMany(Users_Skills, { foreignKey: 'User_Id', onDelete: "CASCADE" });
+// Define the association between Users and Skills through Users_Skills
+Users.belongsToMany(Skills, {
+    through: Users_Skills,
+    foreignKey: "User_Id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+});
+Skills.belongsToMany(Users, {
+    through: Users_Skills,
+    foreignKey: "Skill_Id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+});
+
 
 module.exports = Users;

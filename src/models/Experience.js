@@ -34,13 +34,6 @@ Experience.init({
     User_Id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: Users,
-            key: 'User_Id'
-        }
-        ,
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE"
     },
     Salary: {
         type: DataTypes.FLOAT,
@@ -58,11 +51,18 @@ Experience.init({
     tableName: 'Experience',
 });
 
-Experience.belongsTo(Users, { foreignKey: 'User_Id', onDelete: 'CASCADE' });
-Users.hasMany(Experience, { foreignKey: 'User_Id', onDelete: 'CASCADE' });
+// Define the association between Users and Experience
+Experience.belongsTo(Users, { foreignKey: "User_Id", onDelete: "CASCADE" });
+Users.hasMany(Experience, { foreignKey: "User_Id", onDelete: "CASCADE" });
 
-// one to many relation between Experience_Skills and Experience
-Experience.hasMany(Experience_Skills, { foreignKey: 'Experience_Id', onDelete: 'CASCADE' });
-Experience_Skills.belongsTo(Experience, { foreignKey: 'Experience_Id', onDelete: 'CASCADE' });
+// Define the association between Experience and Experience_Skills
+Experience.hasMany(Experience_Skills, {
+    foreignKey: "Experience_Id",
+    onDelete: "CASCADE",
+});
+Experience_Skills.belongsTo(Experience, {
+    foreignKey: "Experience_Id",
+    onDelete: "CASCADE",
+});
 
 module.exports = Experience;

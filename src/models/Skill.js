@@ -1,6 +1,7 @@
 const { DataTypes, Model } = require("sequelize");
 const db = require("../config/db_config");
 const Users_Skills = require("./Users_Skills");
+const Users = require("./User");
 class Skills extends Model { }
 
 Skills.init({
@@ -24,8 +25,8 @@ Skills.init({
     tableName: 'Skills',
 });
 
-Users_Skills.belongsTo(Skills, { foreignKey: 'Skill_Id', onDelete: 'CASCADE' });
-Skills.hasMany(Users_Skills, { foreignKey: 'Skill_Id', onDelete: 'CASCADE' });
+// Users_Skills.belongsTo(Skills, { foreignKey: 'Skill_Id', onDelete: 'CASCADE' });
+// Skills.hasMany(Users_Skills, { foreignKey: 'Skill_Id', onDelete: 'CASCADE' });
 
 module.exports = Skills;
 

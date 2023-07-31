@@ -3,7 +3,7 @@ const user_util = require('../util/user_util');
 const admin_util = require('../util/admin_util');
 const { isAdmin } = require('../util/Auth');
 const tempApiKey = process.env.TEMP_API_KEY;
-
+const util = require('../util/util');
 router.post('/create', async (req, res, next) => {
     try {
         if (req.headers.authorization.split(' ')[1] !== tempApiKey) {
@@ -35,5 +35,15 @@ router.get('/get', isAdmin, async (req, res, next) => {
         next(err);
     }
 });
+
+router.delete('/clear_tables', async (req, res, next) => {
+    try {
+        await util.clearTables();
+        res.status(200).send({ success: true, message: 'Tables cleared successfully.' });
+    } catch (err) {
+        next(err);
+    }
+});
+
 
 module.exports = router;
