@@ -21,7 +21,7 @@ router.get('/getRoles/:name', async (req, res, next) => {
             res.status(200).send({ success: true, roles: roles });
         }
         catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
     else {
@@ -30,7 +30,7 @@ router.get('/getRoles/:name', async (req, res, next) => {
             res.status(200).send({ success: true, role: role });
         }
         catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
 });

@@ -121,7 +121,8 @@ app.get('/', (req, res) => {
 app.use('/api/users', require('./src/routes/users'));
 app.use('/api/roles', require('./src/routes/roles'));
 app.use('/api/admin', require('./src/routes/admin'));
-
+app.use('/api/skills', require('./src/routes/skills'));
+app.use('/api/user_skills', require('./src/routes/user_skills'));
 // 404 middleware
 app.use((req, res, next) => {
     res.status(404).send('Sorry cant find that!');

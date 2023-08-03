@@ -38,8 +38,6 @@ router.post('/alumni_login', async (req, res, next) => {
                 req.session.IsLoggedIn = true;
                 req.session.User_Id = alumni.User_Id;
                 req.session.UserName = alumni.UserName;
-                // log session 
-                console.log(req.session);
                 res.status(200).send({
                     success: true,
                     actor: "Alumni",
@@ -196,7 +194,6 @@ router.post('/student_signup', async (req, res, next) => {
             res.status(400).send({ success: false, message: 'Email or National Id or User Name already exists.' });
             return;
         }
-        console.log({ UserName, Password, Email, National_Id, Academic_Id });
         await user_util.addStudent({ UserName, Password, Email, National_Id, Academic_Id });
         res.status(201).send({ success: true, message: 'Student added successfully.' });
     } catch (err) {
@@ -222,8 +219,6 @@ router.post('/student_login', async (req, res, next) => {
                 req.session.IsLoggedIn = true;
                 req.session.User_Id = student.User_Id;
                 req.session.UserName = student.UserName;
-                // log session
-                console.log(req.session);
                 res.status(200).send({
                     success: true,
                     actor: "Student",
@@ -256,7 +251,7 @@ router.get("/logout", isAuthorized, (req, res, next) => {
         // destroy session
         req.sessionStore.destroy(sessionId, (err) => {
             if (err) {
-                console.log("session err", err);
+                console.error("session err", err);
                 res.status(500).send({ success: false, message: 'Internal Server Error.' });
             } else {
                 res.status(200).send({ success: true, message: 'User logged out successfully.' });
@@ -317,8 +312,6 @@ router.post('/hr_login', async (req, res, next) => {
                 req.session.IsLoggedIn = true;
                 req.session.User_Id = hr.User_Id;
                 req.session.UserName = hr.UserName;
-                // log session
-                console.log(req.session);
                 res.status(200).send({
                     success: true,
                     actor: "HR",
@@ -561,5 +554,18 @@ router.delete('/delete_phone', isAuthorized, async (req, res, next) => {
     }
 });
 
+router.get('/', isAuthorized, async (req, res, next) => {
+    try {
+        const { UserName } = req.session;
+        const user = await user_util.getUser(UserName);
+        if (!user) {
+            res.status(404).send({ success: false, message: 'User not found.' });
+            return;
+        }
+        res.status(200).send({ success: true, user });
+    } catch (err) {
+        next(err);
+    }
+});
 
 module.exports = router;

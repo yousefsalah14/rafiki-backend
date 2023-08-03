@@ -49,6 +49,7 @@ Experience.init({
     sequelize: db,
     modelName: 'Experience',
     tableName: 'Experience',
+    timestamps: true,
 });
 
 // Define the association between Users and Experience

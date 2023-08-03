@@ -1,5 +1,7 @@
 const User = require("../models/User");
 const Role = require("../models/Role");
+const Users_Skills = require("../models/Users_Skills");
+const Skills = require("../models/Skill");
 const bcrypt = require("bcryptjs");
 const path = require('path');
 const fs = require('fs');
@@ -229,23 +231,43 @@ const updateSocialUrls = async (User_Id, socialUrls = {
 
 const getUser = async (UserName) => {
     try {
-        // get the user with the given UserName and include the Role of the user
         const user = await User.findOne({
             where: {
                 UserName: UserName
             },
-            include: {
-                model: Role,
-                attributes: ['Role_Name'
-                    , 'Role_Id'
-                ]
+            include: [
+                {
+                    model: Role,
+                    attributes: ['Role_Name'],
+                    raw: true
+                },
+                {
+                    model: Skills,
+                    as: 'UserSkills',
+                    attributes: ['Skill_Name'],
+                    through: {
+                        model: Users_Skills,
+                        attributes: ['Rate']
+                    },
+                    raw: true
+                }
+            ],
+        });
+
+        const dataValues = user.dataValues;
+        dataValues.UserSkills = dataValues.UserSkills.map(skill => {
+            return {
+                Skill_Name: skill.Skill_Name,
+                Rate: skill.Users_Skills.Rate
             }
         });
-        return user;
+
+        return dataValues;
     } catch (err) {
         throw err;
     }
 }
+
 
 const checkAcademicIdExists = async (Academic_Id) => {
     try {
@@ -417,6 +439,9 @@ async function processBlurhash(filePath, User_Id) {
         throw error;
     }
 }
+
+
+//TODO: add professor
 
 
 // export the functions

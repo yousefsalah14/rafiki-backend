@@ -16,7 +16,7 @@ Skills.init({
         allowNull: false
     },
     Skill_Description: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
     }
 }, {

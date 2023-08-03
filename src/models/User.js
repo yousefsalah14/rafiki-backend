@@ -55,7 +55,7 @@ Users.init({
         type: DataTypes.STRING,
     },
     About: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
     },
     Color: {
         type: DataTypes.STRING,
@@ -95,6 +95,7 @@ Users.init({
     sequelize: db,
     modelName: 'Users',
     tableName: 'Users',
+    timestamps: true,
 });
 
 
@@ -115,6 +116,7 @@ Users.belongsToMany(Skills, {
     foreignKey: "User_Id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
+    as: 'UserSkills'
 });
 Skills.belongsToMany(Users, {
     through: Users_Skills,
