@@ -254,6 +254,9 @@ const getUser = async (UserName) => {
             ],
         });
 
+        if (!user) {
+            return null;
+        }
         const dataValues = user.dataValues;
         dataValues.UserSkills = dataValues.UserSkills.map(skill => {
             return {

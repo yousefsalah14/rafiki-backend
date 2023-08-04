@@ -11,7 +11,10 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
-
+const html_email = require('./src/mail_templates/reset_password.js')(
+    'www.google.com'
+)
+const sendMail = require('./src/util/mail');
 // Set middleware for CORS
 app.use(cors())
 
@@ -127,4 +130,27 @@ app.use('/api/user_skills', require('./src/routes/user_skills'));
 app.use((req, res, next) => {
     res.status(404).send('Sorry cant find that!');
 });
+
+// test email
+// const options = {
+//     from: 'AMS Support ams.supp@gmail.com',
+//     to: 'mazinislam431@gmail.com',
+//     subject: 'Welcome to AMS',
+//     text: 'Welcome to AMS',
+//     html: html_email,
+//     attachments: [
+//         {
+//             filename: 'vector.jpg',
+//             path: path.join(__dirname, 'public', 'static', 'vector.jpg'),
+//             cid: 'vector'
+//         }
+//     ]
+// }
+
+// sendMail(options, (info) => {
+//     if (info) {
+//         console.log(info);
+//     }
+// });
+
 module.exports = app; // Exporting for testing purposes
