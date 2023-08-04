@@ -26,6 +26,12 @@ router.post('/', isAuthorized, async (req, res, next) => {
             res.status(409).send({ success: false, message: 'User skill already exists.' });
             return;
         }
+        // check if skill exists
+        const skill = await skill_util.getSkillById(Skill_Id);
+        if (!skill) {
+            res.status(404).send({ success: false, message: 'Skill not found.' });
+            return;
+        }
         await skill_util.addUserSkill({ User_Id, Skill_Id, Rate });
         res.status(201).send({ success: true, message: 'User skill created successfully.' });
     } catch (err) {

@@ -1,5 +1,7 @@
 const Skills = require('../models/Skill');
+const User = require('../models/User');
 const Users_Skills = require('../models/Users_Skills');
+
 const getSkills = async () => {
     try {
         const skills = await Skills.findAll();
@@ -54,7 +56,17 @@ const deleteSkill = async (id) => {
 
 const getUserSkills = async (User_Id) => {
     try {
-        const user_skills = await Users_Skills.findAll({ where: { User_Id } });
+        const user_skills = await Users_Skills.findAll(
+            {
+                where: { User_Id },
+                include: {
+                    model: Skills,
+                    attributes: ['Skill_Id', 'Skill_Name', 'Skill_Description']
+                },
+                attributes: ['User_Skill_Id', 'Rate']
+            }
+        )
+        console.log(user_skills);
         return user_skills;
     } catch (err) {
         throw err;

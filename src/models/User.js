@@ -124,6 +124,30 @@ Skills.belongsToMany(Users, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
 });
-
+Users.hasMany(Users_Skills,
+    {
+        foreignKey: "User_Id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+Users_Skills.belongsTo(Users,
+    {
+        foreignKey: "User_Id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    }
+)
+Skills.hasMany(Users_Skills,
+    {
+        foreignKey: "Skill_Id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    }
+)
+Users_Skills.belongsTo(Skills, {
+    foreignKey: "Skill_Id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+})
 
 module.exports = Users;
