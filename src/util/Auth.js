@@ -1,20 +1,12 @@
-
-// verify session
-const isAlumni = (req, res, next) => {
-    //get the sessionId from the authorization header Barer <sessionId>
+// Middleware function for authorization
+const checkAuthorization = (roleNames) => (req, res, next) => {
     const sessionId = req.headers.authorization.split(' ')[1];
-    if (!sessionId) {
-        res.status(401).send({ success: false, message: 'Unauthorized.' });
-        return
-    }
-    //get the session from the session store 
     req.sessionStore.get(sessionId, (err, session) => {
         if (err) {
             console.log("session err", err);
             res.status(500).send({ success: false, message: 'Internal Server Error.' });
-            return;
         } else {
-            if (session?.RoleName === "Alumni" && session?.IsLoggedIn) {
+            if (session?.IsLoggedIn && roleNames.includes(session?.RoleName)) {
                 req.session.User_Id = session.User_Id;
                 req.session.RoleName = session.RoleName;
                 req.session.IsLoggedIn = session.IsLoggedIn;
@@ -26,140 +18,16 @@ const isAlumni = (req, res, next) => {
             }
         }
     });
-}
+};
 
-const isAdmin = (req, res, next) => {
-    const sessionId = req.headers.authorization.split(' ')[1];
-    req.sessionStore.get(sessionId, (err, session) => {
-        if (err) {
-            console.log("session err", err);
-            res.status(500).send({ success: false, message: 'Internal Server Error.' });
-        } else {
-            if (session?.RoleName === "Admin" && session?.IsLoggedIn) {
-                req.session.User_Id = session.User_Id;
-                req.session.RoleName = session.RoleName;
-                req.session.IsLoggedIn = session.IsLoggedIn;
-                req.session.UserName = session.UserName;
-                req.body.sessionId = sessionId;
-                next();
-            } else {
-                res.status(401).send({ success: false, message: 'Unauthorized.' });
-            }
-        }
-    }
-    );
-}
-
-const isStudent = (req, res, next) => {
-    const sessionId = req.headers.authorization.split(' ')[1];
-    req.sessionStore.get(sessionId, (err, session) => {
-        if (err) {
-            console.log("session err", err);
-            res.status(500).send({ success: false, message: 'Internal Server Error.' });
-        } else {
-            if (session?.RoleName === "Student" && session?.IsLoggedIn) {
-                req.session.User_Id = session.User_Id;
-                req.session.RoleName = session.RoleName;
-                req.session.IsLoggedIn = session.IsLoggedIn;
-                req.session.UserName = session.UserName;
-                req.body.sessionId = sessionId;
-                next();
-            } else {
-                res.status(401).send({ success: false, message: 'Unauthorized.' });
-            }
-        }
-    }
-    );
-}
-
-const isHR = (req, res, next) => {
-    const sessionId = req.headers.authorization.split(' ')[1];
-    req.sessionStore.get(sessionId, (err, session) => {
-        if (err) {
-            console.log("session err", err);
-            res.status(500).send({ success: false, message: 'Internal Server Error.' });
-        } else {
-            if (session?.RoleName === "HR" && session?.IsLoggedIn) {
-                req.session.User_Id = session.User_Id;
-                req.session.RoleName = session.RoleName;
-                req.session.IsLoggedIn = session.IsLoggedIn;
-                req.session.UserName = session.UserName;
-                req.body.sessionId = sessionId;
-                next();
-            } else {
-                res.status(401).send({ success: false, message: 'Unauthorized.' });
-            }
-        }
-    }
-    );
-}
-
-const isAuthorized = (req, res, next) => {
-    const sessionId = req.headers.authorization.split(' ')[1];
-    req.sessionStore.get(sessionId, (err, session) => {
-        if (err) {
-            console.log("session err", err);
-            res.status(500).send({ success: false, message: 'Internal Server Error.' });
-        } else {
-            if (session?.IsLoggedIn) {
-                req.session.User_Id = session.User_Id;
-                req.session.RoleName = session.RoleName;
-                req.session.IsLoggedIn = session.IsLoggedIn;
-                req.session.UserName = session.UserName;
-                req.body.sessionId = sessionId;
-                next();
-            } else {
-                res.status(401).send({ success: false, message: 'Unauthorized.' });
-            }
-        }
-    }
-    );
-
-}
-
-const isAlumniOrStudent = (req, res, next) => {
-    const sessionId = req.headers.authorization.split(' ')[1];
-    req.sessionStore.get(sessionId, (err, session) => {
-        if (err) {
-            console.log("session err", err);
-            res.status(500).send({ success: false, message: 'Internal Server Error.' });
-        } else {
-            if ((session?.RoleName === "Alumni" || session?.RoleName === "Student") && session?.IsLoggedIn) {
-                req.session.User_Id = session.User_Id;
-                req.session.RoleName = session.RoleName;
-                req.session.IsLoggedIn = session.IsLoggedIn;
-                req.session.UserName = session.UserName;
-                req.body.sessionId = sessionId;
-                next();
-            } else {
-                res.status(401).send({ success: false, message: 'Unauthorized.' });
-            }
-        }
-    }
-    );
-}
-
-const isProfessor = (req, res, next) => {
-    const sessionId = req.headers.authorization.split(' ')[1];
-    req.sessionStore.get(sessionId, (err, session) => {
-        if (err) {
-            console.log("session err", err);
-            res.status(500).send({ success: false, message: 'Internal Server Error.' });
-        } else {
-            if (session?.RoleName === "Professor" && session?.IsLoggedIn) {
-                req.session.User_Id = session.User_Id;
-                req.session.RoleName = session.RoleName;
-                req.session.IsLoggedIn = session.IsLoggedIn;
-                req.session.UserName = session.UserName;
-                req.body.sessionId = sessionId;
-                next();
-            } else {
-                res.status(401).send({ success: false, message: 'Unauthorized.' });
-            }
-        }
-    }
-    );
-}
+// Middleware functions for specific roles
+const isAlumni = checkAuthorization(["Alumni"]);
+const isAdmin = checkAuthorization(["Admin"]);
+const isStudent = checkAuthorization(["Student"]);
+const isHR = checkAuthorization(["HR"]);
+const isAuthorized = checkAuthorization(["Alumni", "Admin", "Student", "HR", "Professor"]);
+const isAlumniOrStudent = checkAuthorization(["Alumni", "Student"]);
+const isProfessor = checkAuthorization(["Professor"]);
 
 module.exports = {
     isAlumni,
@@ -169,4 +37,4 @@ module.exports = {
     isAuthorized,
     isAlumniOrStudent,
     isProfessor
-}
+};
