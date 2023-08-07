@@ -229,6 +229,21 @@ const updateSocialUrls = async (User_Id, socialUrls = {
     }
 }
 
+const updateName = async (User_Id, { FirstName, LastName }) => {
+    try {
+        await User.update({
+            FirstName: FirstName,
+            LastName: LastName
+        }, {
+            where: {
+                User_Id: User_Id
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+}
+
 const getUser = async (UserName) => {
     try {
         const user = await User.findOne({
@@ -476,5 +491,6 @@ module.exports = {
     uploadCV,
     deleteCV,
     uploadPictureThumbnail,
-    processBlurhash
+    processBlurhash,
+    updateName
 }

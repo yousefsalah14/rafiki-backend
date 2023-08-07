@@ -155,15 +155,10 @@ router.post("/check_academic_id", async (req, res, next) => {
 
 
 // check if user is logged in
-router.get('/is_logged_in', (req, res, next) => {
+router.get('/is_logged_in', isAuthorized, (req, res, next) => {
     try {
-        if (req.session.IsLoggedIn) {
-            const actor = req.session.RoleName;
-            res.status(200).send({ success: true, message: 'User is logged in.', actor });
-        }
-        else {
-            res.status(404).send({ success: false, message: 'User is not logged in.' });
-        }
+        const actor = req.session.RoleName;
+        res.status(200).send({ success: true, message: 'User is logged in.', actor });
     } catch (err) {
         next(err);
     }
@@ -432,6 +427,21 @@ router.put('/update_social_urls', isAuthorized, async (req, res, next) => {
         }
         await user_util.updateSocialUrls(User_Id, data);
         res.status(200).send({ success: true, message: 'Social URLs updated successfully.' });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.put('/update_name', isAuthorized, async (req, res, next) => {
+    try {
+        const { User_Id } = req.session;
+        const { FirstName, LastName } = req.body;
+        if (!FirstName || !LastName) {
+            res.status(400).send({ success: false, message: 'Missing credentials.' });
+            return;
+        }
+        await user_util.updateName(User_Id, { FirstName, LastName });
+        res.status(200).send({ success: true, message: 'Name updated successfully.' });
     } catch (err) {
         next(err);
     }
