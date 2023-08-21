@@ -73,6 +73,10 @@ router.put('/update_phone', isAuthorized, async (req, res, next) => {
         await user_util.updatePhone(User_Id, Phone);
         res.status(200).send({ success: true, message: 'Phone updated successfully.' });
     } catch (err) {
+        if (err.message === 'Phone already exists') {
+            res.status(409).send({ success: false, message: 'Phone already exists.' });
+            return;
+        }
         next(err);
     }
 });

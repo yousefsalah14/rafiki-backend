@@ -32,6 +32,7 @@ Users.init({
     },
     Phone: {
         type: DataTypes.STRING,
+        unique: true
     },
     Role_Id: {
         type: DataTypes.INTEGER,

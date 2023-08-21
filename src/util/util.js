@@ -15,7 +15,6 @@ const PROFESSOR_ROLE_ID = 5;
 
 
 const syncTables = async (FORCE = false) => {
-    console.log('syncing tables', FORCE);
     await Role.sync({ force: FORCE });
     await User.sync({ force: FORCE });
     await Skill.sync({ force: FORCE });

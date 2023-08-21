@@ -52,6 +52,11 @@ const comparePassword = async (password, hashedPassword) => {
 
 const updatePhone = async (User_Id, Phone) => {
     try {
+        // ensure that the phone is unique it's unique in the model already
+        const user = await User.findOne({ where: { Phone } });
+        if (user !== null && user.User_Id !== User_Id) {
+            throw new Error("Phone already exists");
+        }
         await User.update({
             Phone: Phone
         }, {
