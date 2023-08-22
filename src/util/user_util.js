@@ -8,6 +8,8 @@ const fs = require('fs');
 const { encode } = require('blurhash');
 const sharp = require('sharp');
 const { ADMIN_ROLE_ID, ALUMNI_ROLE_ID, STUDENT_ROLE_ID, HR_ROLE_ID, PROFESSOR_ROLE_ID } = require('./util');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('../config/config');
 
 
 const addAlumni = async ({ UserName, Password, Email, National_Id }) => {
@@ -463,8 +465,60 @@ async function processBlurhash(filePath, User_Id) {
     }
 }
 
+async function getUserByEmail(email) {
+    try {
+        const user = await User.findOne({ where: { Email: email } });
+        return user;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function generateResetPasswordToken(user) {
+    try {
+        // get the user id and email
+        const { User_Id, Email } = user;
+        // generate the token
+        const token = jwt.sign({ User_Id, Email }, JWT_SECRET, { expiresIn: '1h' });
+        return token;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function getUserByResetPasswordToken(token) {
+    try {
+        const decodedToken = jwt.verify(token, JWT_SECRET);
+        const { User_Id, Email } = decodedToken;
+        const user = await User.findOne({ where: { User_Id, Email } });
+        return user;
+    } catch (error) {
+        if (error instanceof jwt.JsonWebTokenError) {
+            console.log("invalid token");
+            return null;
+        }
+        throw error;
+    }
+}
+
+async function updatePassword(User_Id, password) {
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        await User.update({
+            Password: hashedPassword
+        }, {
+            where: {
+                User_Id: User_Id
+            }
+        });
+    } catch (error) {
+        throw error;
+    }
+}
 
 //TODO: add professor
+
 
 
 // export the functions
@@ -497,5 +551,9 @@ module.exports = {
     deleteCV,
     uploadPictureThumbnail,
     processBlurhash,
-    updateName
+    updateName,
+    getUserByEmail,
+    generateResetPasswordToken,
+    getUserByResetPasswordToken,
+    updatePassword
 }

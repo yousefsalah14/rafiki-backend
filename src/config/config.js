@@ -9,7 +9,9 @@ if (process.env.NODE_ENV?.trim() != "dev") {
         DB_HOST: process.env.DB_HOST,
         DB_PORT: process.env.DB_PORT,
         DB_NAME: process.env.DB_NAME,
-        SSL: true
+        SSL: true,
+        TEMP_API_KEY: process.env.TEMP_API_KEY,
+        JWT_SECRET: process.env.JWT_SECRET,
     }
 } else {
     module.exports = {
@@ -19,6 +21,8 @@ if (process.env.NODE_ENV?.trim() != "dev") {
         DB_HOST: "127.0.0.1",
         DB_PORT: process.env.DB_PORT,
         DB_NAME: process.env.DB_NAME,
-        SSL: false
+        SSL: false,
+        TEMP_API_KEY: process.env.TEMP_API_KEY,
+        JWT_SECRET: process.env.JWT_SECRET,
     }
 }

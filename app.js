@@ -11,10 +11,6 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
-const html_email = require('./src/mail_templates/reset_password.js')(
-    'www.google.com'
-)
-const sendMail = require('./src/util/mail');
 // Set middleware for CORS
 app.use(cors())
 
@@ -109,13 +105,6 @@ app.listen(PORT, () => {
     console.log("\x1b[1m", `Server listening on: http://localhost:${PORT}`);
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error("\x1b[31m", err.stack);
-    res.status(500).send('Something broke!');
-});
-
-
 // Routes
 app.get('/', (req, res) => {
     res.send('Hello World!');
@@ -126,31 +115,18 @@ app.use('/api/roles', require('./src/routes/roles'));
 app.use('/api/admin', require('./src/routes/admin'));
 app.use('/api/skills', require('./src/routes/skills'));
 app.use('/api/user_skills', require('./src/routes/user_skills'));
+
 // 404 middleware
 app.use((req, res, next) => {
     res.status(404).send('Sorry cant find that!');
 });
 
-// test email
-// const options = {
-//     from: 'AMS Support ams.supp@gmail.com',
-//     to: 'mazinislam431@gmail.com',
-//     subject: 'Welcome to AMS',
-//     text: 'Welcome to AMS',
-//     html: html_email,
-//     attachments: [
-//         {
-//             filename: 'vector.jpg',
-//             path: path.join(__dirname, 'public', 'static', 'vector.jpg'),
-//             cid: 'vector'
-//         }
-//     ]
-// }
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error("\x1b[31m", err);
+    res.status(500).send('Something broke!');
+});
 
-// sendMail(options, (info) => {
-//     if (info) {
-//         console.log(info);
-//     }
-// });
+
 
 module.exports = app; // Exporting for testing purposes
