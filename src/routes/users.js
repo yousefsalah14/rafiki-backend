@@ -3,7 +3,7 @@ const user_util = require('../util/user_util');
 const { isAlumni, isStudent, isHR, isAuthorized, isAlumniOrStudent, isProfessor } = require('../util/Auth');
 const path = require('path');
 const { sendEmail } = require('../util/mail_util');
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const { FRONTEND_URL } = require('../config/config');
 router.post('/alumni_signup', async (req, res, next) => {
     try {
         const { UserName, Password, Email, National_Id } = req.body;
@@ -591,22 +591,24 @@ router.post('/reset_password', async (req, res, next) => {
             res.status(400).send({ success: false, message: 'Missing credentials.' });
             return;
         }
-        res.status(200).send({ success: true, message: 'Reset password email will be sent soon.' });
         const user = await user_util.getUserByEmail(email);
         if (!user) {
             res.status(404).send({ success: false, message: 'User not found.' });
             return;
         }
+        res.status(200).send({ success: true, message: 'Reset password email will be sent soon.' });
         const token = await user_util.generateResetPasswordToken(user);
-        const url = `${FRONTEND_URL}/reset_password/${token}`;
+        const url = `${FRONTEND_URL}${token}`;
+        console.log(url);
         const reset_password_email = require('../mail_templates/reset_password.js')(url)
         const attachments = [{
             filename: 'vector.jpg',
             path: path.join(__dirname, '..', '..', 'public', 'static', 'vector.jpg'),
             cid: 'vector'
         }];
-        await sendEmail(email, 'Reset Password', '', reset_password_email, attachments);
+        sendEmail(email, 'Reset Password', '', reset_password_email, attachments);
     } catch (error) {
+        console.log(error);
         next(error);
     }
 });

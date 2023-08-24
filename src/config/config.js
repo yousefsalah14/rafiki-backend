@@ -12,6 +12,7 @@ if (process.env.NODE_ENV?.trim() != "dev") {
         SSL: true,
         TEMP_API_KEY: process.env.TEMP_API_KEY,
         JWT_SECRET: process.env.JWT_SECRET,
+        FRONTEND_URL: process.env.FRONTEND_URL,
     }
 } else {
     module.exports = {
@@ -24,5 +25,6 @@ if (process.env.NODE_ENV?.trim() != "dev") {
         SSL: false,
         TEMP_API_KEY: process.env.TEMP_API_KEY,
         JWT_SECRET: process.env.JWT_SECRET,
+        FRONTEND_URL: process.env.FRONTEND_URL,
     }
 }
