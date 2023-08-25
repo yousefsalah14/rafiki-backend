@@ -3,7 +3,15 @@ const user_util = require('../util/user_util');
 const { isAlumni, isStudent, isHR, isAuthorized, isAlumniOrStudent, isProfessor } = require('../util/Auth');
 const path = require('path');
 const { sendEmail } = require('../util/mail_util');
-const { FRONTEND_URL } = require('../config/config');
+const { FRONTEND_URL, CLOUDINARY_API_SECRET } = require('../config/config');
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({
+    cloud_name: 'do6oz83pz',
+    api_key: '524566722143567',
+    api_secret: CLOUDINARY_API_SECRET
+});
+
+
 router.post('/alumni_signup', async (req, res, next) => {
     try {
         const { UserName, Password, Email, National_Id } = req.body;
@@ -340,7 +348,7 @@ router.get('/hr_logout', isHR, (req, res, next) => {
 // upload picture
 router.post('/upload_picture', isAuthorized, async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id, UserName } = req.session;
         if (!req.files || Object.keys(req.files).length === 0) {
             res.status(400).send({ success: false, message: 'No files were uploaded.' });
             return;
@@ -350,10 +358,24 @@ router.post('/upload_picture', isAuthorized, async (req, res, next) => {
             res.status(400).send({ success: false, message: 'Missing credentials.' });
             return;
         }
-        const pictureName = picture[0].filename;
-        await user_util.uploadPicture(User_Id, pictureName);
-        res.status(200).send({ success: true, message: 'Picture uploaded successfully.', Img: pictureName }).end();
-        user_util.processBlurhash(picture[0].path, User_Id);
+        const user = await user_util.getUser(UserName);
+        if (!user) {
+            res.status(404).send({ success: false, message: 'User not found.' });
+            return;
+        }
+        // delete old picture from cloudinary if exists
+        if (user.Img) {
+            const public_id = "profile_pictures/" + user.Img.split('/').slice(-1)[0].split('.')[0];
+            await cloudinary.uploader.destroy(public_id);
+        }
+        const picturePath = picture[0].path;
+        const fileName = picture[0].filename;
+        const uploadResult = await cloudinary.uploader.upload(picturePath, { folder: 'profile_pictures', use_filename: true });
+        const pictureUrl = uploadResult.secure_url;
+        await user_util.uploadPicture(User_Id, pictureUrl);
+        res.status(200).send({ success: true, message: 'Picture uploaded successfully.', Img: pictureUrl }).end();
+        await user_util.processBlurhash(picturePath, User_Id);
+        user_util.deletePictureFile(fileName)
     } catch (err) {
         next(err);
     }
@@ -363,7 +385,7 @@ router.post('/upload_picture', isAuthorized, async (req, res, next) => {
 
 router.post('/upload_cv', isAlumniOrStudent, async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id, UserName } = req.session;
         if (!req.files || Object.keys(req.files).length === 0) {
             res.status(400).send({ success: false, message: 'No files were uploaded.' });
             return;
@@ -373,9 +395,23 @@ router.post('/upload_cv', isAlumniOrStudent, async (req, res, next) => {
             res.status(400).send({ success: false, message: 'Missing credentials.' });
             return;
         }
+        const user = await user_util.getUser(UserName);
+        if (!user) {
+            res.status(404).send({ success: false, message: 'User not found.' });
+            return;
+        }
+        // delete old cv from cloudinary if exists
+        if (user.CV) {
+            const public_id = "cvs/" + user.CV.split('/').slice(-1)[0].split('.')[0];
+            await cloudinary.uploader.destroy(public_id);
+        }
+        const cvPath = cv[0].path;
         const cvName = cv[0].filename;
-        await user_util.uploadCV(User_Id, cvName);
-        res.status(200).send({ success: true, message: 'CV uploaded successfully.', CV: cvName });
+        const uploadResult = await cloudinary.uploader.upload(cvPath, { folder: 'cvs', use_filename: true });
+        const cvUrl = uploadResult.secure_url;
+        await user_util.uploadCV(User_Id, cvUrl);
+        res.status(200).send({ success: true, message: 'CV uploaded successfully.', CV: cvUrl }).end();
+        user_util.deleteCVFile(cvName)
     } catch (err) {
         next(err);
     }

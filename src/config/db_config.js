@@ -27,6 +27,7 @@ else {
             logging: false,
             host: config.DB_HOST,
             dialect: 'mysql',
+
         }
     );
 }

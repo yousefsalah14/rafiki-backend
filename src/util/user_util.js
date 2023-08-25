@@ -555,5 +555,7 @@ module.exports = {
     getUserByEmail,
     generateResetPasswordToken,
     getUserByResetPasswordToken,
-    updatePassword
+    updatePassword,
+    deletePictureFile,
+    deleteCVFile
 }
