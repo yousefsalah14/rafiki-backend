@@ -7,10 +7,6 @@ const cors = require('cors');
 const session = require('express-session');
 const { checkRoles } = require('./src/util/role_util');
 var SequelizeStore = require("connect-session-sequelize")(session.Store);
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
 // Set middleware for CORS
 app.use(cors())
 
@@ -65,41 +61,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Set middleware for serving static files
 app.use(express.static('public'));
-
-// check if public/uploads folder exists and if not create it
-const uploadsFolder = path.join(__dirname, 'public', 'uploads');
-if (!fs.existsSync(uploadsFolder)) {
-    fs.mkdirSync(uploadsFolder, { recursive: true });
-}
-// check if public/uploads/pictures folder exists and if not create it
-const picturesFolder = path.join(__dirname, 'public', 'uploads', 'pictures');
-if (!fs.existsSync(picturesFolder)) {
-    fs.mkdirSync(picturesFolder, { recursive: true });
-}
-// check if public/uploads/cvs folder exists and if not create it
-const cvsFolder = path.join(__dirname, 'public', 'uploads', 'cvs');
-if (!fs.existsSync(cvsFolder)) {
-    fs.mkdirSync(cvsFolder, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        if (file.fieldname === 'picture') {
-            cb(null, path.join(__dirname, 'public', 'uploads', 'pictures'));
-        }
-        else if (file.fieldname === 'cv') {
-            cb(null, path.join(__dirname, 'public', 'uploads', 'cvs'));
-        }
-    },
-    filename: function (req, file, cb) {
-        cb(null, uuidv4() + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage: storage, limits: { fileSize: 10000000 } }).fields([{ name: 'picture', maxCount: 1 }, { name: 'cv', maxCount: 1 }]);
-app.use(upload);
-
-
 
 app.listen(PORT, () => {
     console.log("\x1b[1m", `Server listening on: http://localhost:${PORT}`);
