@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const user_util = require('../util/user_util');
-const { isAuthorized } = require('../util/Auth');
+const { isAuthorized } = require('../middlewares/Auth');
 const skills_util = require('../util/skills_util');
 
 router.get('/', isAuthorized, async (req, res, next) => {

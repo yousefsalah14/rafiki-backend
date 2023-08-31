@@ -1,4 +1,8 @@
-// Middleware function for authorization
+/**
+ * Middleware function for authorization
+ * @param {string[]} roleNames - An array of role names that are authorized to access the route
+ * @returns {Function} - A middleware function that checks if the user is authorized to access the route
+ */
 const checkAuthorization = (roleNames) => (req, res, next) => {
     const sessionId = req.headers.authorization.split(' ')[1];
     req.sessionStore.get(sessionId, (err, session) => {
@@ -20,7 +24,9 @@ const checkAuthorization = (roleNames) => (req, res, next) => {
     });
 };
 
-// Middleware functions for specific roles
+/**
+ * Middleware functions for specific roles
+ */
 const isAlumni = checkAuthorization(["Alumni"]);
 const isAdmin = checkAuthorization(["Admin"]);
 const isStudent = checkAuthorization(["Student"]);
@@ -36,5 +42,6 @@ module.exports = {
     isHR,
     isAuthorized,
     isAlumniOrStudent,
-    isProfessor
+    isProfessor,
+    checkAuthorization
 };

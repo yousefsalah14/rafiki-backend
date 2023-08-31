@@ -5,13 +5,14 @@
   "scripts": {
     "start": "node app.js",
     "dev": "SET NODE_ENV=dev&& nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha src/test --exit"
   },
   "author": "Mazin Islam",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "blurhash": "^2.0.5",
+    "chai": "^4.3.8",
     "cloudinary": "^1.40.0",
     "connect-session-sequelize": "^7.1.7",
     "cookie-parser": "^1.4.6",
@@ -20,11 +21,13 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "jsonwebtoken": "^9.0.1",
+    "mocha": "^10.2.0",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.4.0",
     "nodemailer": "^6.9.4",
     "sequelize": "^6.32.1",
     "sharp": "^0.32.4",
+    "sinon": "^15.2.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
@@ -32,11 +35,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MaroMohamedSalah/Alumni_Management_System_Back_End.git"
+    "url": "git+https://github.com/N1ghtHunter/alumni-backend.git"
   },
   "bugs": {
-    "url": "https://github.com/MaroMohamedSalah/Alumni_Management_System_Back_End/issues"
+    "url": "https://github.com/N1ghtHunter/alumni-backend/issues"
   },
-  "homepage": "https://github.com/MaroMohamedSalah/Alumni_Management_System_Back_End#readme",
-  "description": ""
+  "homepage": "https://github.com/N1ghtHunter/alumni-backend#readme",
+  "description": "This is a web application that allows alumni to register for an account and upload their profile picture and CV. They can also view their profile and edit their information if necessary."
 }

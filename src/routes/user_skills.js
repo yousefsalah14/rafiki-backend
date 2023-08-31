@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { isAuthorized } = require('../util/Auth');
+const { isAuthorized } = require('../middlewares/Auth');
 const skill_util = require('../util/skills_util');
 // get all user skills
 router.get('/', isAuthorized, async (req, res, next) => {
