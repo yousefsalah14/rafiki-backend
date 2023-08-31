@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const user_util = require('../util/user_util');
-const { isAlumni, isStudent, isHR, isAuthorized, isAlumniOrStudent, isProfessor } = require('../util/Auth');
+const { isAlumni, isStudent, isHR, isAuthorized, isAlumniOrStudent, isProfessor } = require('../middlewares/Auth');
 const path = require('path');
 const { sendEmail } = require('../util/mail_util');
 const { FRONTEND_URL, CLOUDINARY_API_SECRET } = require('../config/config');
@@ -8,7 +8,8 @@ const cloudinary = require('cloudinary').v2;
 cloudinary.config({
     cloud_name: 'do6oz83pz',
     api_key: '524566722143567',
-    api_secret: CLOUDINARY_API_SECRET
+    api_secret: CLOUDINARY_API_SECRET,
+    upload_preset: 'ggdkuker'
 });
 
 
@@ -349,15 +350,7 @@ router.get('/hr_logout', isHR, (req, res, next) => {
 router.post('/upload_picture', isAuthorized, async (req, res, next) => {
     try {
         const { User_Id, UserName } = req.session;
-        if (!req.files || Object.keys(req.files).length === 0) {
-            res.status(400).send({ success: false, message: 'No files were uploaded.' });
-            return;
-        }
-        const { picture } = req.files;
-        if (!picture) {
-            res.status(400).send({ success: false, message: 'Missing credentials.' });
-            return;
-        }
+        const { pictureUrl } = req.body;
         const user = await user_util.getUser(UserName);
         if (!user) {
             res.status(404).send({ success: false, message: 'User not found.' });
@@ -365,17 +358,11 @@ router.post('/upload_picture', isAuthorized, async (req, res, next) => {
         }
         // delete old picture from cloudinary if exists
         if (user.Img) {
-            const public_id = "profile_pictures/" + user.Img.split('/').slice(-1)[0].split('.')[0];
+            const public_id = "images/" + user.Img.split('/').slice(-1)[0].split('.')[0];
             await cloudinary.uploader.destroy(public_id);
         }
-        const picturePath = picture[0].path;
-        const fileName = picture[0].filename;
-        const uploadResult = await cloudinary.uploader.upload(picturePath, { folder: 'profile_pictures', use_filename: true });
-        const pictureUrl = uploadResult.secure_url;
         await user_util.uploadPicture(User_Id, pictureUrl);
-        res.status(200).send({ success: true, message: 'Picture uploaded successfully.', Img: pictureUrl }).end();
-        await user_util.processBlurhash(picturePath, User_Id);
-        user_util.deletePictureFile(fileName)
+        res.status(200).send({ success: true, message: 'Picture uploaded successfully.', Img: pictureUrl })
     } catch (err) {
         next(err);
     }
@@ -386,12 +373,8 @@ router.post('/upload_picture', isAuthorized, async (req, res, next) => {
 router.post('/upload_cv', isAlumniOrStudent, async (req, res, next) => {
     try {
         const { User_Id, UserName } = req.session;
-        if (!req.files || Object.keys(req.files).length === 0) {
-            res.status(400).send({ success: false, message: 'No files were uploaded.' });
-            return;
-        }
-        const { cv } = req.files;
-        if (!cv) {
+        const { cvUrl } = req.body;
+        if (!cvUrl) {
             res.status(400).send({ success: false, message: 'Missing credentials.' });
             return;
         }
@@ -405,13 +388,8 @@ router.post('/upload_cv', isAlumniOrStudent, async (req, res, next) => {
             const public_id = "cvs/" + user.CV.split('/').slice(-1)[0].split('.')[0];
             await cloudinary.uploader.destroy(public_id);
         }
-        const cvPath = cv[0].path;
-        const cvName = cv[0].filename;
-        const uploadResult = await cloudinary.uploader.upload(cvPath, { folder: 'cvs', use_filename: true });
-        const cvUrl = uploadResult.secure_url;
         await user_util.uploadCV(User_Id, cvUrl);
         res.status(200).send({ success: true, message: 'CV uploaded successfully.', CV: cvUrl }).end();
-        user_util.deleteCVFile(cvName)
     } catch (err) {
         next(err);
     }
