@@ -1,9 +1,18 @@
 const router = require('express').Router();
 const user_util = require('../util/user_util');
-const { isAlumni, isStudent, isHR, isAuthorized, isAlumniOrStudent, isProfessor } = require('../util/Auth');
+const { isAlumni, isStudent, isHR, isAuthorized, isAlumniOrStudent, isProfessor } = require('../middlewares/Auth');
 const path = require('path');
 const { sendEmail } = require('../util/mail_util');
-const { FRONTEND_URL } = require('../config/config');
+const { FRONTEND_URL, CLOUDINARY_API_SECRET } = require('../config/config');
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({
+    cloud_name: 'do6oz83pz',
+    api_key: '524566722143567',
+    api_secret: CLOUDINARY_API_SECRET,
+    upload_preset: 'ggdkuker'
+});
+
+
 router.post('/alumni_signup', async (req, res, next) => {
     try {
         const { UserName, Password, Email, National_Id } = req.body;
@@ -340,20 +349,20 @@ router.get('/hr_logout', isHR, (req, res, next) => {
 // upload picture
 router.post('/upload_picture', isAuthorized, async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
-        if (!req.files || Object.keys(req.files).length === 0) {
-            res.status(400).send({ success: false, message: 'No files were uploaded.' });
+        const { User_Id, UserName } = req.session;
+        const { pictureUrl } = req.body;
+        const user = await user_util.getUser(UserName);
+        if (!user) {
+            res.status(404).send({ success: false, message: 'User not found.' });
             return;
         }
-        const { picture } = req.files;
-        if (!picture) {
-            res.status(400).send({ success: false, message: 'Missing credentials.' });
-            return;
+        // delete old picture from cloudinary if exists
+        if (user.Img) {
+            const public_id = "images/" + user.Img.split('/').slice(-1)[0].split('.')[0];
+            await cloudinary.uploader.destroy(public_id);
         }
-        const pictureName = picture[0].filename;
-        await user_util.uploadPicture(User_Id, pictureName);
-        res.status(200).send({ success: true, message: 'Picture uploaded successfully.', Img: pictureName }).end();
-        user_util.processBlurhash(picture[0].path, User_Id);
+        await user_util.uploadPicture(User_Id, pictureUrl);
+        res.status(200).send({ success: true, message: 'Picture uploaded successfully.', Img: pictureUrl })
     } catch (err) {
         next(err);
     }
@@ -363,19 +372,24 @@ router.post('/upload_picture', isAuthorized, async (req, res, next) => {
 
 router.post('/upload_cv', isAlumniOrStudent, async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
-        if (!req.files || Object.keys(req.files).length === 0) {
-            res.status(400).send({ success: false, message: 'No files were uploaded.' });
-            return;
-        }
-        const { cv } = req.files;
-        if (!cv) {
+        const { User_Id, UserName } = req.session;
+        const { cvUrl } = req.body;
+        if (!cvUrl) {
             res.status(400).send({ success: false, message: 'Missing credentials.' });
             return;
         }
-        const cvName = cv[0].filename;
-        await user_util.uploadCV(User_Id, cvName);
-        res.status(200).send({ success: true, message: 'CV uploaded successfully.', CV: cvName });
+        const user = await user_util.getUser(UserName);
+        if (!user) {
+            res.status(404).send({ success: false, message: 'User not found.' });
+            return;
+        }
+        // delete old cv from cloudinary if exists
+        if (user.CV) {
+            const public_id = "cvs/" + user.CV.split('/').slice(-1)[0].split('.')[0];
+            await cloudinary.uploader.destroy(public_id);
+        }
+        await user_util.uploadCV(User_Id, cvUrl);
+        res.status(200).send({ success: true, message: 'CV uploaded successfully.', CV: cvUrl }).end();
     } catch (err) {
         next(err);
     }

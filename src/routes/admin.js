@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const user_util = require('../util/user_util');
 const admin_util = require('../util/admin_util');
-const { isAdmin } = require('../util/Auth');
+const { isAdmin } = require('../middlewares/Auth');
 const tempApiKey = process.env.TEMP_API_KEY;
 const util = require('../util/util');
 router.post('/create', async (req, res, next) => {
