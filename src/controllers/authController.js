@@ -13,28 +13,28 @@ exports.login = async (req, res, next) => {
         const user = await user_util.getUser(UserName);
         if (!user) {
             res.status(404).send({ success: false, message: 'User not found.' });
-        } else {
-            const isMatch = await user_util.comparePassword(Password, user.Password);
-            if (!isMatch) {
-                res.status(401).send({ success: false, message: 'Invalid credentials.' });
-            } else {
-                // console.log(user);
-                req.session.RoleName = user.Role.Role_Name;
-                req.session.IsLoggedIn = true;
-                req.session.User_Id = user.User_Id;
-                req.session.UserName = user.UserName;
-                // how use the custom field in session 
-
-                res.status(200).send({
-                    success: true,
-                    actor: user.Role.Role_Name,
-                    user_id: user.User_Id,
-                    user_name: user.UserName,
-                    sessionId: req.session.id,
-                    message: 'User logged in successfully.'
-                });
-            }
+            return;
         }
+        const isMatch = await user_util.comparePassword(Password, user.Password);
+        if (!isMatch) {
+            res.status(401).send({ success: false, message: 'Invalid credentials.' });
+            return
+        }
+        // console.log(user);
+        req.session.RoleName = user.Role.Role_Name;
+        req.session.IsLoggedIn = true;
+        req.session.User_Id = user.User_Id;
+        req.session.UserName = user.UserName;
+        // how use the custom field in session 
+
+        res.status(200).send({
+            success: true,
+            actor: user.Role.Role_Name,
+            user_id: user.User_Id,
+            user_name: user.UserName,
+            sessionId: req.session.id,
+            message: 'User logged in successfully.'
+        });
     } catch (err) {
         next(err);
     }
