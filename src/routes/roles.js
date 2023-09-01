@@ -1,4 +1,4 @@
-const role_util = require('../util/role_util');
+const role_util = require('../utils/role_util');
 const router = require('express').Router();
 
 router.post('/addRole', async (req, res, next) => {
