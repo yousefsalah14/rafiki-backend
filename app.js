@@ -2,10 +2,10 @@ const express = require('express');
 const PORT = process.env.PORT || 3008;
 const db = require('./src/config/db_config');
 const app = express();
-const util = require('./src/util/util');
+const util = require('./src/utils/util');
 const cors = require('cors');
 const session = require('express-session');
-const { checkRoles } = require('./src/util/role_util');
+const { checkRoles } = require('./src/utils/role_util');
 var SequelizeStore = require("connect-session-sequelize")(session.Store);
 // Set middleware for CORS
 app.use(cors())
@@ -35,12 +35,22 @@ util.syncTables().then(() => {
         console.error("\x1b[31m", err);
     });
 
+function extendDefaultFields(defaults, session) {
+    return {
+        data: defaults.data,
+        expires: defaults.expires,
+        User_Id: session.User_Id,
+    };
+}
+
 const sessionStore = new SequelizeStore({
     db: db,
     modelKey: 'Session',
+    table: "Session",
     checkExpirationInterval: 15 * 60 * 1000, // The interval at which to cleanup expired sessions in milliseconds.
     // Default is 1 week
-    expiration: 7 * 24 * 60 * 60 * 1000 // The maximum age (in milliseconds) of a valid session.
+    expiration: 7 * 24 * 60 * 60 * 1000,// The maximum age (in milliseconds) of a valid session.
+    extendDefaultFields: extendDefaultFields
 });
 sessionStore.sync();
 // Set middleware for sessions
