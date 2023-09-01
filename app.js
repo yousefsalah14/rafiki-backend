@@ -7,9 +7,10 @@ const cors = require('cors');
 const session = require('express-session');
 const { checkRoles } = require('./src/utils/role_util');
 var SequelizeStore = require("connect-session-sequelize")(session.Store);
-// Set middleware for CORS
-app.use(cors())
-
+const helmet = require('helmet');
+const morgan = require('morgan');
+const fs = require('fs');
+const path = require('path');
 db.authenticate()
     .then(() => {
         console.log("\x1b[32m", 'Database connection has been established successfully.');
@@ -66,6 +67,17 @@ app.use(session({
     }
 }));
 
+// Set middleware for CORS
+app.use(cors())
+// Set middleware for security
+app.use(helmet());
+// Set middleware for logging
+const format = ':remote-addr - :remote-user [:date[web]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+app.use(morgan(format, {
+    skip: function (req, res) { return res.statusCode < 400 },
+    stream: accessLogStream
+}));
 // Set middleware for parsing request body
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

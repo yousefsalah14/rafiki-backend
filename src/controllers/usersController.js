@@ -1,7 +1,5 @@
 const user_util = require('../utils/user_util');
-const path = require('path');
-const { sendEmail } = require('../utils/mail_util');
-const { FRONTEND_URL, CLOUDINARY_API_SECRET } = require('../config/config');
+const { CLOUDINARY_API_SECRET } = require('../config/config');
 const cloudinary = require('cloudinary').v2;
 cloudinary.config({
     cloud_name: 'do6oz83pz',
