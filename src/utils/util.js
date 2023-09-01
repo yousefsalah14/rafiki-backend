@@ -4,6 +4,7 @@ const Skill = require('../models/Skill');
 const Users_Skills = require('../models/Users_Skills');
 const ExperienceSkills = require('../models/Experience_Skills');
 const Experience = require('../models/Experience');
+const Session = require('../models/Session');
 const db = require('../config/db_config');
 const sequelize = require('../config/db_config');
 
@@ -21,6 +22,7 @@ const syncTables = async (FORCE = false) => {
     await Users_Skills.sync({ force: FORCE });
     await Experience.sync({ force: FORCE });
     await ExperienceSkills.sync({ force: FORCE });
+    await Session.sync({ force: FORCE });
 }
 
 async function clearTables() {

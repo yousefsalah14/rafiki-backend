@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Role = require("../models/Role");
 const Users_Skills = require("../models/Users_Skills");
 const Skills = require("../models/Skill");
+const Session = require("../models/Session");
 const bcrypt = require("bcryptjs");
 const path = require('path');
 const fs = require('fs');
@@ -10,7 +11,22 @@ const sharp = require('sharp');
 const { ADMIN_ROLE_ID, ALUMNI_ROLE_ID, STUDENT_ROLE_ID, HR_ROLE_ID, PROFESSOR_ROLE_ID } = require('./util');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config/config');
+const db = require('../config/db_config');
 
+
+const getUserSessions = async (userId) => {
+    try {
+        const sessions = await Session.findAll({
+            where: {
+                User_Id: userId
+            }
+        });
+        return sessions;
+    } catch (err) {
+        console.error(err);
+
+    }
+};
 
 const addAlumni = async ({ UserName, Password, Email, National_Id }) => {
     try {
@@ -517,6 +533,7 @@ async function updatePassword(User_Id, password) {
     }
 }
 
+
 //TODO: add professor
 
 
@@ -557,5 +574,6 @@ module.exports = {
     getUserByResetPasswordToken,
     updatePassword,
     deletePictureFile,
-    deleteCVFile
+    deleteCVFile,
+    getUserSessions
 }

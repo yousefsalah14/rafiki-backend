@@ -66,7 +66,6 @@ const getUserSkills = async (User_Id) => {
                 attributes: ['User_Skill_Id', 'Rate']
             }
         )
-        console.log(user_skills);
         return user_skills;
     } catch (err) {
         throw err;
