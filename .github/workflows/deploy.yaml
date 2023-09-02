@@ -1,4 +1,4 @@
-name: Node.js CI/CD
+name: 🥸 Deploy to Azure Web App Service 🕵️‍♀️
 
 on:
   push:

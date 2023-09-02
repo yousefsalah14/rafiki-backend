@@ -158,17 +158,17 @@ exports.checkEmailExists = async (req, res, next) => {
 
 exports.checkUserNameExists = async (req, res, next) => {
     try {
-        const { Email } = req.body;
-        if (!Email) {
+        const { UserName } = req.body;
+        if (!UserName) {
             res.status(400).send({ success: false, message: 'Missing credentials.' });
             return;
         }
-        const exists = await user_util.checkEmailExists(Email);
+        const exists = await user_util.checkUserNameExists(UserName);
         if (exists) {
-            res.status(200).send({ success: false, message: 'Email already exists please try another one.' });
+            res.status(200).send({ success: false, message: 'User Name already exists please try another one.' });
         }
         else {
-            res.status(404).send({ success: true, message: 'Email does not exist.' });
+            res.status(404).send({ success: true, message: 'User Name does not exist.' });
         }
     } catch (err) {
         next(err);
