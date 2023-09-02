@@ -35,15 +35,15 @@ router.put('/update_phone', isAuthorized, usersController.updatePhone);
 // upload picture
 router.post('/upload_picture', isAuthorized, usersController.uploadProfilePicture);
 
-router.post('/upload_cv', isAlumniOrStudent, usersController.uploadCV);
+router.post('/upload_cv', isAlumniOrStudent, isAlumniOrStudent, usersController.uploadCV);
 
-router.put('/update_about', usersController.updateAbout);
+router.put('/update_about', isAuthorized, usersController.updateAbout);
 
-router.put('/update_country', usersController.updateCountry);
+router.put('/update_country', isAuthorized, usersController.updateCountry);
 
-router.put('/update_social_urls', usersController.updateSocialUrls);
+router.put('/update_social_urls', isAuthorized, usersController.updateSocialUrls);
 
-router.put('/update_name', usersController.updateName);
+router.put('/update_name', isAuthorized, usersController.updateName);
 
 
 
@@ -59,19 +59,17 @@ router.get('/fetch_cookie', (req, res, next) => {
     }
 });
 
-router.delete('/delete_profile_picture', usersController.deleteProfilePicture);
+router.delete('/delete_profile_picture', isAuthorized, usersController.deleteProfilePicture);
 
-router.delete('/delete_cv', usersController.deleteCV);
+router.delete('/delete_cv', isAuthorized, usersController.deleteCV);
 
-router.delete('/delete_behance_url', usersController.deleteBehanceUrl);
+router.delete('/delete_behance_url', isAuthorized, usersController.deleteBehanceUrl);
 
-router.delete('/delete_github_url', usersController.deleteGitHubUrl);
+router.delete('/delete_github_url', isAuthorized, usersController.deleteGitHubUrl);
 
-router.delete('/delete_linkedin_url', usersController.deleteLinkedInUrl);
+router.delete('/delete_linkedin_url', isAuthorized, usersController.deleteLinkedInUrl);
 
-router.delete('/delete_about', usersController.deleteAbout);
-
-router.delete('/delete_phone', usersController.deletePhone);
+router.delete('/delete_about', isAuthorized, usersController.deletePhone);
 
 
 router.get('/', isAuthorized, usersController.getFullUser);
