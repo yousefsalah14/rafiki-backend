@@ -2,7 +2,7 @@ const skill_util = require('../utils/skills_util');
 
 exports.getAllUserSkills = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         const user_skills = await skill_util.getUserSkills(User_Id);
         res.status(200).send({ success: true, user_skills: user_skills ? user_skills : [] });
     } catch (err) {
@@ -12,7 +12,7 @@ exports.getAllUserSkills = async (req, res, next) => {
 
 exports.createUserSkill = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         let { Skill_Id, Rate } = req.body;
         if (!Skill_Id) {
             res.status(400).send({ success: false, message: 'Missing required fields.' });
@@ -40,7 +40,7 @@ exports.updateUserSkill = async (req, res, next) => {
     try {
         const { id } = req.params;
         const { Rate } = req.body;
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         if (!Rate || !id) {
             res.status(400).send({ success: false, message: 'Missing required fields.' });
             return;
@@ -68,7 +68,7 @@ exports.updateUserSkill = async (req, res, next) => {
 exports.deleteUserSkill = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         if (!id) {
             res.status(400).send({ success: false, message: 'Missing required fields.' });
             return;

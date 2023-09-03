@@ -28,7 +28,7 @@ exports.addAlumni = async (req, res, next) => {
 
 exports.getAlumni = async (req, res, next) => {
     try {
-        const { UserName } = req.session;
+        const { UserName } = req.body.session;
         const alumni = await user_util.getAlumni(UserName);
         if (!alumni) {
             res.status(404).send({ success: false, message: 'Alumni not found.' });
@@ -60,7 +60,7 @@ exports.addStudent = async (req, res, next) => {
 
 exports.getStudent = async (req, res, next) => {
     try {
-        const { UserName } = req.session;
+        const { UserName } = req.body.session;
         const student = await user_util.getStudent(UserName);
         if (!student) {
             res.status(404).send({ success: false, message: 'Student not found.' });
@@ -92,7 +92,7 @@ exports.addHR = async (req, res, next) => {
 
 exports.getHR = async (req, res, next) => {
     try {
-        const { UserName } = req.session;
+        const { UserName } = req.body.session;
         const hr = await user_util.getHR(UserName);
         if (!hr) {
             res.status(404).send({ success: false, message: 'HR not found.' });
@@ -106,7 +106,7 @@ exports.getHR = async (req, res, next) => {
 
 exports.getFullUser = async (req, res, next) => {
     try {
-        const { UserName } = req.session;
+        const { UserName } = req.body.session;
         const user = await user_util.getUser(UserName);
         if (!user) {
             res.status(404).send({ success: false, message: 'User not found.' });
@@ -196,7 +196,7 @@ exports.checkAcademicIdExists = async (req, res, next) => {
 
 exports.updatePhone = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         const { Phone } = req.body;
         if (!Phone) {
             res.status(400).send({ success: false, message: 'Missing credentials.' });
@@ -215,7 +215,7 @@ exports.updatePhone = async (req, res, next) => {
 
 exports.uploadProfilePicture = async (req, res, next) => {
     try {
-        const { User_Id, UserName } = req.session;
+        const { User_Id, UserName } = req.body.session;
         const { pictureUrl } = req.body;
         const user = await user_util.getUser(UserName);
         if (!user) {
@@ -236,7 +236,7 @@ exports.uploadProfilePicture = async (req, res, next) => {
 
 exports.uploadCV = async (req, res, next) => {
     try {
-        const { User_Id, UserName } = req.session;
+        const { User_Id, UserName } = req.body.session;
         const { cvUrl } = req.body;
         if (!cvUrl) {
             res.status(400).send({ success: false, message: 'Missing credentials.' });
@@ -261,7 +261,7 @@ exports.uploadCV = async (req, res, next) => {
 
 exports.updateAbout = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         const { About } = req.body;
         if (!About) {
             res.status(400).send({ success: false, message: 'Missing credentials.' });
@@ -276,7 +276,7 @@ exports.updateAbout = async (req, res, next) => {
 
 exports.updateCountry = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         const { Country } = req.body;
         if (!Country) {
             res.status(400).send({ success: false, message: 'Missing credentials.' });
@@ -291,7 +291,7 @@ exports.updateCountry = async (req, res, next) => {
 
 exports.updateSocialUrls = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         const { Behance_URL, LinkedIn_URL, GitHub_URL } = req.body;
         let data = {};
         if (Behance_URL) {
@@ -316,7 +316,7 @@ exports.updateSocialUrls = async (req, res, next) => {
 
 exports.updateName = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         const { FirstName, LastName } = req.body;
         if (!FirstName || !LastName) {
             res.status(400).send({ success: false, message: 'Missing credentials.' });
@@ -331,7 +331,7 @@ exports.updateName = async (req, res, next) => {
 
 exports.deleteProfilePicture = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         await user_util.deleteProfilePicture(User_Id);
         res.status(200).send({ success: true, message: 'Profile picture deleted successfully.' });
     } catch (err) {
@@ -341,7 +341,7 @@ exports.deleteProfilePicture = async (req, res, next) => {
 
 exports.deleteCV = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         await user_util.deleteCV(User_Id);
         res.status(200).send({ success: true, message: 'CV deleted successfully.' });
     } catch (err) {
@@ -351,7 +351,7 @@ exports.deleteCV = async (req, res, next) => {
 
 exports.deleteBehanceUrl = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         await user_util.deleteBehance_URL(User_Id);
         res.status(200).send({ success: true, message: 'Behance URL deleted successfully.' });
     } catch (err) {
@@ -361,7 +361,7 @@ exports.deleteBehanceUrl = async (req, res, next) => {
 
 exports.deleteGitHubUrl = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         await user_util.deleteGitHub_URL(User_Id);
         res.status(200).send({ success: true, message: 'GitHub URL deleted successfully.' });
     } catch (err) {
@@ -371,7 +371,7 @@ exports.deleteGitHubUrl = async (req, res, next) => {
 
 exports.deleteLinkedInUrl = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         await user_util.deleteLinkedIn_URL(User_Id);
         res.status(200).send({ success: true, message: 'LinkedIn URL deleted successfully.' });
     } catch (err) {
@@ -381,7 +381,7 @@ exports.deleteLinkedInUrl = async (req, res, next) => {
 
 exports.deleteAbout = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         await user_util.deleteAbout(User_Id);
         res.status(200).send({ success: true, message: 'About deleted successfully.' });
     } catch (err) {
@@ -391,7 +391,7 @@ exports.deleteAbout = async (req, res, next) => {
 
 exports.deletePhone = async (req, res, next) => {
     try {
-        const { User_Id } = req.session;
+        const { User_Id } = req.body.session;
         await user_util.deletePhone(User_Id);
         res.status(200).send({ success: true, message: 'Phone deleted successfully.' });
     } catch (err) {

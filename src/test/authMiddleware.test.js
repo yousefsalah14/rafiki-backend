@@ -12,10 +12,10 @@ describe('Auth', () => {
             req.sessionStore.get.withArgs('mockSessionId').yields(null, mockSession);
             checkAuthorization(['Admin'])(req, res, next);
             expect(next.calledOnce).to.be.true;
-            expect(req.session.User_Id).to.equal(mockSession.User_Id);
-            expect(req.session.RoleName).to.equal(mockSession.RoleName);
-            expect(req.session.IsLoggedIn).to.equal(mockSession.IsLoggedIn);
-            expect(req.session.UserName).to.equal(mockSession.UserName);
+            expect(req.body.session.User_Id).to.equal(mockSession.User_Id);
+            expect(req.body.session.RoleName).to.equal(mockSession.RoleName);
+            expect(req.body.session.IsLoggedIn).to.equal(mockSession.IsLoggedIn);
+            expect(req.body.session.UserName).to.equal(mockSession.UserName);
             expect(req.body.sessionId).to.equal('mockSessionId');
         });
 

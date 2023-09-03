@@ -69,7 +69,9 @@ router.delete('/delete_github_url', isAuthorized, usersController.deleteGitHubUr
 
 router.delete('/delete_linkedin_url', isAuthorized, usersController.deleteLinkedInUrl);
 
-router.delete('/delete_about', isAuthorized, usersController.deletePhone);
+router.delete('/delete_about', isAuthorized, usersController.deleteAbout);
+
+router.delete('/delete_phone', isAuthorized, usersController.deletePhone);
 
 
 router.get('/', isAuthorized, usersController.getFullUser);

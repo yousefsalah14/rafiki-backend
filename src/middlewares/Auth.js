@@ -11,10 +11,7 @@ const checkAuthorization = (roleNames) => (req, res, next) => {
             res.status(500).send({ success: false, message: 'Internal Server Error.' });
         } else {
             if (session?.IsLoggedIn && roleNames.includes(session?.RoleName)) {
-                req.session.User_Id = session.User_Id;
-                req.session.RoleName = session.RoleName;
-                req.session.IsLoggedIn = session.IsLoggedIn;
-                req.session.UserName = session.UserName;
+                req.body.session = session;
                 req.body.sessionId = sessionId;
                 next();
             } else {

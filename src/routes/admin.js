@@ -29,7 +29,7 @@ router.post('/create', async (req, res, next) => {
 
 router.get('/get', isAdmin, async (req, res, next) => {
     try {
-        const admin = await admin_util.getAdmin(req.session.UserName);
+        const admin = await admin_util.getAdmin(req.body.session.UserName);
         res.status(200).send({ success: true, admin: admin });
     } catch (err) {
         next(err);

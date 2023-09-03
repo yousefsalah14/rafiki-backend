@@ -68,7 +68,7 @@ describe('Auth Controller', () => {
 
     describe('isLoggedIn', () => {
         it('should return 200 if user is logged in', () => {
-            const req = { session: { RoleName: 'test' } };
+            const req = { body: { session: { RoleName: 'test' } } };
             const res = {};
             const next = sinon.spy();
             res.status = sinon.stub().returns(res);

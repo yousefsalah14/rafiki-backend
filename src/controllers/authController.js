@@ -42,7 +42,7 @@ exports.login = async (req, res, next) => {
 
 exports.isLoggedIn = (req, res, next) => {
     try {
-        const actor = req.session.RoleName;
+        const actor = req.body.session.RoleName;
         res.status(200).send({ success: true, message: 'User is logged in.', actor });
     } catch (err) {
         next(err);
