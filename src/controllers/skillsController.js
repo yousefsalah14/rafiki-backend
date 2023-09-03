@@ -11,8 +11,8 @@ exports.getSkills = async (req, res, next) => {
 
 exports.addSkill = async (req, res, next) => {
     try {
-        const { Skill_Name, Skill_Description } = req.body;
-        if (!Skill_Name || !Skill_Description) {
+        const { Skill_Name } = req.body;
+        if (!Skill_Name) {
             res.status(400).send({ success: false, message: 'Missing required fields.' });
             return;
         }
@@ -21,7 +21,7 @@ exports.addSkill = async (req, res, next) => {
             res.status(409).send({ success: false, message: 'Skill already exists.' });
             return;
         }
-        await skills_util.addSkill({ Skill_Name, Skill_Description });
+        await skills_util.addSkill(Skill_Name);
         res.status(201).send({ success: true, message: 'Skill created successfully.' });
     } catch (err) {
         next(err);
@@ -31,7 +31,7 @@ exports.addSkill = async (req, res, next) => {
 exports.updateSkill = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { Skill_Name, Skill_Description } = req.body;
+        const { Skill_Name } = req.body;
         if (!Skill_Name || !id) {
             res.status(400).send({ success: false, message: 'Missing required fields.' });
             return;
@@ -48,14 +48,11 @@ exports.updateSkill = async (req, res, next) => {
                 return;
             }
         }
-        if (!Skill_Description) {
-            Skill_Description = skill.Skill_Description;
-        }
-        if (Skill_Description === skill.Skill_Description && Skill_Name === skill.Skill_Name) {
+        if (Skill_Name === skill.Skill_Name) {
             res.status(204).send();
             return;
         }
-        await skills_util.updateSkill(id, { Skill_Name, Skill_Description });
+        await skills_util.updateSkill(id, { Skill_Name });
         res.status(200).send({ success: true, message: 'Skill updated successfully.' });
     } catch (err) {
         next(err);

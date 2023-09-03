@@ -20,9 +20,9 @@ const checkSkillNameExists = async (Skill_Name) => {
     }
 }
 
-const addSkill = async ({ Skill_Name, Skill_Description }) => {
+const addSkill = async (Skill_Name) => {
     try {
-        await Skills.create({ Skill_Name, Skill_Description });
+        await Skills.create({ Skill_Name });
     } catch (err) {
         console.error(err);
         throw err;
@@ -38,9 +38,9 @@ const getSkillById = async (id) => {
     }
 }
 
-const updateSkill = async (id, { Skill_Name, Skill_Description }) => {
+const updateSkill = async (id, { Skill_Name }) => {
     try {
-        await Skills.update({ Skill_Name, Skill_Description }, { where: { Skill_Id: id } });
+        await Skills.update({ Skill_Name }, { where: { Skill_Id: id } });
     } catch (err) {
         throw err;
     }
@@ -61,7 +61,7 @@ const getUserSkills = async (User_Id) => {
                 where: { User_Id },
                 include: {
                     model: Skills,
-                    attributes: ['Skill_Id', 'Skill_Name', 'Skill_Description']
+                    attributes: ['Skill_Id', 'Skill_Name']
                 },
                 attributes: ['User_Skill_Id', 'Rate']
             }

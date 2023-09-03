@@ -14,10 +14,6 @@ Skills.init({
     Skill_Name: {
         type: DataTypes.STRING,
         allowNull: false
-    },
-    Skill_Description: {
-        type: DataTypes.TEXT,
-        allowNull: false
     }
 }, {
     sequelize: db,
