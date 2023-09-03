@@ -331,7 +331,16 @@ exports.updateName = async (req, res, next) => {
 
 exports.deleteProfilePicture = async (req, res, next) => {
     try {
-        const { User_Id } = req.body.session;
+        const { User_Id, UserName } = req.body.session;
+        const user = await user_util.getUser(UserName);
+        if (!user) {
+            res.status(404).send({ success: false, message: 'User not found.' });
+            return;
+        }
+        if (user.Img) {
+            const public_id = "images/" + user.Img.split('/').slice(-1)[0].split('.')[0];
+            await cloudinary.uploader.destroy(public_id);
+        }
         await user_util.deleteProfilePicture(User_Id);
         res.status(200).send({ success: true, message: 'Profile picture deleted successfully.' });
     } catch (err) {
@@ -341,7 +350,16 @@ exports.deleteProfilePicture = async (req, res, next) => {
 
 exports.deleteCV = async (req, res, next) => {
     try {
-        const { User_Id } = req.body.session;
+        const { User_Id, UserName } = req.body.session;
+        const user = await user_util.getUser(UserName);
+        if (!user) {
+            res.status(404).send({ success: false, message: 'User not found.' });
+            return;
+        }
+        if (user.CV) {
+            const public_id = "cvs/" + user.CV.split('/').slice(-1)[0].split('.')[0];
+            await cloudinary.uploader.destroy(public_id);
+        }
         await user_util.deleteCV(User_Id);
         res.status(200).send({ success: true, message: 'CV deleted successfully.' });
     } catch (err) {

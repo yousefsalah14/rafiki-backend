@@ -341,20 +341,13 @@ const deleteCVFile = async (fileName) => {
 
 const deleteProfilePicture = async (User_Id) => {
     try {
-        await User.findOne({
+        await User.update({
+            Img: null
+        }, {
             where: {
                 User_Id: User_Id
             }
-        }).then(user => {
-            if (user?.Img !== null) {
-                deletePictureFile(user.Img);
-                user.Img = null;
-                user.save();
-            }
-        }).catch(err => {
-            throw err;
         });
-
     } catch (err) {
         throw err;
     }
@@ -363,18 +356,12 @@ const deleteProfilePicture = async (User_Id) => {
 
 const deleteCV = async (User_Id) => {
     try {
-        await User.findOne({
+        await User.update({
+            CV: null
+        }, {
             where: {
                 User_Id: User_Id
             }
-        }).then(user => {
-            if (user?.CV !== null) {
-                deleteCVFile(user.CV);
-                user.CV = null;
-                user.save();
-            }
-        }).catch(err => {
-            throw err;
         });
     } catch (err) {
         throw err;
