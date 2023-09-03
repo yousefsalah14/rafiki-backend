@@ -21,8 +21,8 @@ exports.addSkill = async (req, res, next) => {
             res.status(409).send({ success: false, message: 'Skill already exists.' });
             return;
         }
-        await skills_util.addSkill(Skill_Name);
-        res.status(201).send({ success: true, message: 'Skill created successfully.' });
+        const skill = await skills_util.addSkill(Skill_Name);
+        res.status(201).send({ success: true, message: 'Skill created successfully.', skill: skill });
     } catch (err) {
         next(err);
     }

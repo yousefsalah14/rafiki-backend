@@ -22,7 +22,7 @@ const checkSkillNameExists = async (Skill_Name) => {
 
 const addSkill = async (Skill_Name) => {
     try {
-        await Skills.create({ Skill_Name });
+        return await Skills.create({ Skill_Name });
     } catch (err) {
         console.error(err);
         throw err;
