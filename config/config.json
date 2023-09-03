@@ -18,6 +18,12 @@
     "password": "Alumnai_pwd23",
     "database": "alumnidb",
     "host": "alumnaimysql.mysql.database.azure.com",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "dialectOptions": {
+      "ssl": {
+        "ca": "/path/to/ca.pem",
+        "rejectUnauthorized": false
+      }
+    }
   }
 }
