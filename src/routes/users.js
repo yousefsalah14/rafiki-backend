@@ -35,7 +35,7 @@ router.put('/update_phone', isAuthorized, usersController.updatePhone);
 // upload picture
 router.post('/upload_picture', isAuthorized, usersController.uploadProfilePicture);
 
-router.post('/upload_cv', isAlumniOrStudent, isAlumniOrStudent, usersController.uploadCV);
+router.post('/upload_cv', isAlumniOrStudent, usersController.uploadCV);
 
 router.put('/update_about', isAuthorized, usersController.updateAbout);
 
