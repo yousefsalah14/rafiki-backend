@@ -29,8 +29,8 @@ exports.createUserSkill = async (req, res, next) => {
             res.status(404).send({ success: false, message: 'Skill not found.' });
             return;
         }
-        await skill_util.addUserSkill({ User_Id, Skill_Id, Rate });
-        res.status(201).send({ success: true, message: 'User skill created successfully.' });
+        const addUserSkill = await skill_util.addUserSkill({ User_Id, Skill_Id, Rate });
+        res.status(201).send({ success: true, message: 'User skill created successfully.', User_Skill_Id: addUserSkill.User_Skill_Id });
     } catch (err) {
         next(err);
     }

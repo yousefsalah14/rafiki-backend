@@ -87,7 +87,7 @@ const addUserSkill = async ({ User_Id, Skill_Id, Rate }) => {
         Rate = 0;
     }
     try {
-        await Users_Skills.create({ User_Id, Skill_Id, Rate });
+        return await Users_Skills.create({ User_Id, Skill_Id, Rate });
     } catch (err) {
         throw err;
     }
