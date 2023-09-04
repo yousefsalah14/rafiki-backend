@@ -6,8 +6,6 @@ const Session = require("../models/Session");
 const bcrypt = require("bcryptjs");
 const path = require('path');
 const fs = require('fs');
-const { encode } = require('blurhash');
-const sharp = require('sharp');
 const { ADMIN_ROLE_ID, ALUMNI_ROLE_ID, STUDENT_ROLE_ID, HR_ROLE_ID, PROFESSOR_ROLE_ID } = require('./util');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config/config');
@@ -277,7 +275,6 @@ const getUser = async (UserName) => {
                 {
                     model: Role,
                     attributes: ['Role_Name'],
-                    raw: true
                 },
                 {
                     model: Skills,
@@ -285,9 +282,8 @@ const getUser = async (UserName) => {
                     attributes: ['Skill_Name'],
                     through: {
                         model: Users_Skills,
-                        attributes: ['Rate']
+                        attributes: ['Rate', 'User_Skill_Id']
                     },
-                    raw: true
                 }
             ],
         });
@@ -299,7 +295,8 @@ const getUser = async (UserName) => {
         dataValues.UserSkills = dataValues.UserSkills.map(skill => {
             return {
                 Skill_Name: skill.Skill_Name,
-                Rate: skill.Users_Skills.Rate
+                Rate: skill.Users_Skills.Rate,
+                id: skill.Users_Skills.User_Skill_Id
             }
         });
 
@@ -319,25 +316,6 @@ const checkAcademicIdExists = async (Academic_Id) => {
     }
 }
 
-const deletePictureFile = async (fileName) => {
-    try {
-        const filePath = path.join(__dirname, '..', "..", 'public', 'uploads', 'pictures', fileName);
-        if (fs.existsSync(filePath))
-            fs.unlinkSync(filePath);
-    } catch (err) {
-        throw err;
-    }
-}
-
-const deleteCVFile = async (fileName) => {
-    try {
-        const filePath = path.join(__dirname, '..', "..", 'public', 'uploads', 'cvs', fileName);
-        if (fs.existsSync(filePath))
-            fs.unlinkSync(filePath);
-    } catch (err) {
-        throw err;
-    }
-}
 
 const deleteProfilePicture = async (User_Id) => {
     try {
@@ -438,35 +416,7 @@ const deleteGitHub_URL = async (User_Id) => {
     }
 }
 
-const uploadPictureThumbnail = async (User_Id, ImgThumbnail) => {
-    try {
-        await User.update({
-            ImgThumbnail: ImgThumbnail
-        }, {
-            where: {
-                User_Id: User_Id
-            }
-        });
-    } catch (err) {
-        throw err;
-    }
-}
 
-async function processBlurhash(filePath, User_Id) {
-    try {
-        const imageBuffer = await sharp(filePath).toBuffer();
-        const { width, height } = await sharp(imageBuffer).metadata();
-        const rgbaPixels = await sharp(imageBuffer)
-            .ensureAlpha()
-            .raw()
-            .toBuffer();
-        const hash = encode(rgbaPixels, width, height, 4, 4);
-        uploadPictureThumbnail(User_Id, hash);
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
 
 async function getUserByEmail(email) {
     try {
@@ -553,14 +503,10 @@ module.exports = {
     deletePhone,
     uploadCV,
     deleteCV,
-    uploadPictureThumbnail,
-    processBlurhash,
     updateName,
     getUserByEmail,
     generateResetPasswordToken,
     getUserByResetPasswordToken,
     updatePassword,
-    deletePictureFile,
-    deleteCVFile,
     getUserSessions
 }
