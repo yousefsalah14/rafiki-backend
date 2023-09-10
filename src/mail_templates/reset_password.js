@@ -1,5 +1,5 @@
 const HTML_TEMPLATE = (text) => {
-    return `
+	return `
     <!DOCTYPE html>
     <html lang="en">
     
@@ -39,6 +39,11 @@ const HTML_TEMPLATE = (text) => {
                             <div style="text-align: center; padding: 40px 0; height: 15%; color: #525252;">
                                 <h1>Oops!</h1>
                             </div>
+                            <img
+								src="cid:logo"
+								alt="Logo"
+								width="100px"
+							/>
                             <table class="content-cell" width="100%">
                                 <tr>
                                     <td style="padding: 0;">
@@ -54,7 +59,7 @@ const HTML_TEMPLATE = (text) => {
                             </table>
                             <div
                                 style="text-align: center; font-size: 12px; padding: 20px 0; height: 15%; background-color: #333; color: #fff;">
-                                <p>&copy; 2023 Your Company. All rights reserved.</p>
+                                <p>&copy; 2023 Rafiki. All rights reserved.</p>
                             </div>
                         </div>
                     </td>
@@ -64,8 +69,8 @@ const HTML_TEMPLATE = (text) => {
     </body>
     
     </html>`;
-}
+};
 
 module.exports = (text) => {
-    return HTML_TEMPLATE(text);
-}
+	return HTML_TEMPLATE(text);
+};
