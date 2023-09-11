@@ -7,14 +7,14 @@ router.post('/alumni_signup', usersController.addAlumni);
 
 router.post('/student_signup', usersController.addStudent);
 
-router.post("/hr_signup", usersController.addHR);
+router.post('/hr_signup', usersController.addHR);
 
-router.post("/login", authController.login);
+router.post('/login', authController.login);
 
 // check if user is logged in
 router.get('/is_logged_in', isAuthorized, authController.isLoggedIn);
 
-router.get("/logout", isAuthorized, authController.logout);
+router.get('/logout', isAuthorized, authController.logout);
 
 router.get('/get_alumni', isAlumni, usersController.getAlumni);
 
@@ -28,7 +28,7 @@ router.post('/check_email', usersController.checkEmailExists);
 
 router.post('/check_user_name', usersController.checkUserNameExists);
 
-router.post("/check_academic_id", usersController.checkAcademicIdExists);
+router.post('/check_academic_id', usersController.checkAcademicIdExists);
 
 router.put('/update_phone', isAuthorized, usersController.updatePhone);
 
@@ -45,18 +45,20 @@ router.put('/update_social_urls', isAuthorized, usersController.updateSocialUrls
 
 router.put('/update_name', isAuthorized, usersController.updateName);
 
+router.put('/update_position', isAuthorized, usersController.updatePosition);
 
+router.get('/generate_cv', isAuthorized, usersController.generateCV);
 
 router.get('/fetch_cookie', (req, res, next) => {
-    try {
-        // extract cookie from request
-        console.log('Cookies: ')
-        console.log(req.cookies);
-        console.log('Signed Cookies: ', req.signedCookies)
-        res.status(200).send({ success: true, message: 'Cookie fetched successfully.', cookie: req.cookies });
-    } catch (err) {
-        next(err);
-    }
+	try {
+		// extract cookie from request
+		console.log('Cookies: ');
+		console.log(req.cookies);
+		console.log('Signed Cookies: ', req.signedCookies);
+		res.status(200).send({ success: true, message: 'Cookie fetched successfully.', cookie: req.cookies });
+	} catch (err) {
+		next(err);
+	}
 });
 
 router.delete('/delete_profile_picture', isAuthorized, usersController.deleteProfilePicture);
@@ -72,7 +74,6 @@ router.delete('/delete_linkedin_url', isAuthorized, usersController.deleteLinked
 router.delete('/delete_about', isAuthorized, usersController.deleteAbout);
 
 router.delete('/delete_phone', isAuthorized, usersController.deletePhone);
-
 
 router.get('/', isAuthorized, usersController.getFullUser);
 
