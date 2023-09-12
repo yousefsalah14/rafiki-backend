@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3db0805e-f197-4b1b-a58f-7ef51a1330ee",
+		"_postman_id": "55d558cf-bf54-4050-b166-48221bb2a8ba",
 		"name": "Alumni",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "25439189"
@@ -129,6 +129,11 @@
 							"key": "limit",
 							"value": "5",
 							"disabled": true
+						},
+						{
+							"key": "user",
+							"value": "dskfjksd",
+							"disabled": true
 						}
 					]
 				}
@@ -173,12 +178,14 @@
 						{
 							"key": "Email",
 							"value": "",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "National_Id",
 							"value": "",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
@@ -246,6 +253,55 @@
 					"path": [
 						"users",
 						"get_alumni"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Full User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Response status code is 200', function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"})",
+							"",
+							"pm.test('Validate the success field is true', function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData.success).to.be.true;",
+							"})",
+							"",
+							"pm.test('Email is in a valid format', function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.user.Email).to.exist.and.to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);",
+							"})",
+							"",
+							"pm.test('User_Id is a non-negative integer', function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.user.User_Id).to.exist.and.to.be.a('number');",
+							"    pm.expect(responseData.user.User_Id).to.be.at.least(0, 'User_Id should be a non-negative integer');",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}api/users/",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"users",
+						""
 					]
 				}
 			},
@@ -430,6 +486,62 @@
 			"response": []
 		},
 		{
+			"name": "Check User Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Success field is present in the response and has a boolean value\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.exist.and.to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Message field is present and is a string\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.message).to.exist.and.to.be.a('string');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "UserName",
+							"value": "Mazin",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/users/check_user_name",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"users",
+						"check_user_name"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Is Logged In",
 			"event": [
 				{
@@ -473,6 +585,49 @@
 		},
 		{
 			"name": "Student Signup",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 201\", function () {",
+							"  pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body has the required fields - success and message\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.success).to.exist;",
+							"    pm.expect(responseData.message).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"The success field is a boolean value\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.success).to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Message field should be a non-empty string\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -684,13 +839,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}api/users/student_logout",
+					"raw": "{{baseUrl}}api/users/logout",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
 						"users",
-						"student_logout"
+						"logout"
 					]
 				}
 			},
@@ -855,43 +1010,45 @@
 			"response": []
 		},
 		{
-			"name": "HRLogout",
+			"name": "Get HR",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
 							"pm.test(\"Response status code is 200\", function () {",
-							"  pm.expect(pm.response.code).to.equal(200);",
+							"    pm.expect(pm.response.code).to.equal(200);",
 							"});",
 							"",
 							"",
-							"pm.test(\"Success field exists in the response\", function () {",
+							"pm.test(\"Validate the 'success' field in the response\", function () {",
 							"  const responseData = pm.response.json();",
 							"  ",
 							"  pm.expect(responseData).to.be.an('object');",
-							"  pm.expect(responseData.success).to.exist;",
+							"  pm.expect(responseData.success).to.exist.and.to.be.a('boolean');",
 							"});",
 							"",
 							"",
-							"pm.test(\"Success field has a boolean value\", function () {",
+							"pm.test(\"Validate the 'student' object in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData.hr).to.exist.and.to.be.an('object');",
+							"});",
+							"",
+							"",
+							"pm.test(\"User_Id is a non-negative integer\", function () {",
 							"    const responseData = pm.response.json();",
 							"    ",
-							"    pm.expect(responseData.success).to.be.a('boolean');",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.hr.User_Id).to.be.a('number');",
+							"    pm.expect(responseData.hr.User_Id).to.be.at.least(0);",
 							"});",
 							"",
 							"",
-							"pm.test(\"Message field exists in the response\", function () {",
-							"  const responseData = pm.response.json();",
-							"  ",
-							"  pm.expect(responseData.message).to.exist;",
-							"});",
-							"",
-							"",
-							"pm.test(\"Message field is a non-empty string\", function () {",
-							"  const responseData = pm.response.json();",
-							"  ",
-							"  pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+							"pm.test(\"UserName is a non-empty string\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.hr.UserName).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
 							"});"
 						],
 						"type": "text/javascript"
@@ -902,13 +1059,56 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}api/users/hr_logout",
+					"raw": "{{baseUrl}}api/users/get_hr",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
 						"users",
-						"hr_logout"
+						"get_hr"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HR Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Response status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"})",
+							"",
+							"pm.test('Success property is true', function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData.success).to.be.true;",
+							"})",
+							"",
+							"",
+							"pm.test('Response does not contain any additional properties', function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(Object.keys(responseData)).to.have.lengthOf(2);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}api/users/logout",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"users",
+						"logout"
 					]
 				}
 			},
@@ -981,18 +1181,55 @@
 		},
 		{
 			"name": "Upload Picture",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"The success field should be true\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData.success).to.be.true;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"The Img field should not be empty\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData.Img).to.exist.and.to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Img field is a valid URL\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData.Img).to.be.a('string');\r",
+							"    pm.expect(responseData.Img).to.match(/^http[s]?:\\/\\/\\S+/);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "picture",
-							"type": "file",
-							"src": "/C:/Users/Mazin/Downloads/default_picture.png"
+					"mode": "raw",
+					"raw": "{\r\n    \"pictureUrl\" : \"https://res.cloudinary.com/do6oz83pz/image/upload/v1693490580/images/q6iafbtnwp5x7vhz8r5x.jpg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
 					"raw": "{{baseUrl}}api/users/upload_picture",
@@ -1009,18 +1246,56 @@
 		},
 		{
 			"name": "Upload CV",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Success field is true\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.success).to.be.true;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"CV field is not empty\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData.CV).to.exist.and.to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"CV field is a valid URL\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.CV).to.exist.and.to.match(/^http(s)?:\\/\\/\\w+(\\.\\w+)*(:[0-9]+)?\\/?.*$/, \"CV field should be a valid URL\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "cv",
-							"type": "file",
-							"src": "/C:/Users/Mazin/Downloads/Mazin-Islam (2).pdf"
+					"mode": "raw",
+					"raw": "{\r\n    \"cvUrl\": \"https://res.cloudinary.com/do6oz83pz/image/upload/v1693490945/cvs/hpa0dw2oymfefjol6n6i.pdf\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
 					"raw": "{{baseUrl}}api/users/upload_cv",
@@ -1097,6 +1372,78 @@
 					"path": [
 						"users",
 						"update_phone"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Success field is present in the response\", function () {",
+							"    pm.expect(pm.response.json().success).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"The success field should be a boolean\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.success).to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Message field is present in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.have.property('message');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Message field is a string\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.message).to.be.a('string');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "FirstName",
+							"value": "Mazin",
+							"type": "text"
+						},
+						{
+							"key": "LastName",
+							"value": "Islam",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/users/update_name",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"users",
+						"update_name"
 					]
 				}
 			},
@@ -1239,7 +1586,120 @@
 			"response": []
 		},
 		{
+			"name": "Update Position",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has 'success' field\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check if 'success' field is a boolean\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the 'message' field\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.have.property(\"message\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"The 'message' field is a string\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.message).to.be.a('string');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "Country",
+							"value": "Egypt",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/users/update_country",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"users",
+						"update_country"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Update Social Urls",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Success field is present in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"The success field has a boolean value\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.success).to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"The message field is present in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.message).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Message field is a string\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.message).to.be.a('string');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -1271,6 +1731,469 @@
 					"path": [
 						"users",
 						"update_social_urls"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate cv",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Success field is present in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"The success field has a boolean value\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.success).to.equal(true)",
+							"});",
+							"",
+							"pm.test(\"Response has a valid cvUrl field\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.cvUrl).to.exist.and.to.be.a('string');",
+							"});",
+							"",
+							"pm.test(\"cvUrl is a non-empty string\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.cvUrl).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"cvUrl is a valid URL format\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.cvUrl).to.match(/^https?:\\/\\/[^\\s/$.?#].[^\\s]*$/);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/users/generate_cv",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"users",
+						"generate_cv"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add skill",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 201\", function () {",
+							"  pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.success).to.exist.and.to.be.a('boolean');",
+							"  pm.expect(responseData.message).to.exist.and.to.be.a('string');",
+							"});",
+							"",
+							"",
+							"pm.test(\"The success field is a boolean value\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.success).to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"The message field is a non-empty string\", function () {",
+							"  const responseData = pm.response.json();",
+							"",
+							"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "Skill_Name",
+							"value": "Web developmenttt",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/skills/",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"skills",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All skills",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate the 'success' field is true\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.be.true;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Verify that the 'skills' array is present and contains at least one element\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.skills).to.exist.and.to.be.an('array').that.is.not.empty;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}api/skills/",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"skills",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update skill",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "Skill_Name",
+							"value": "Web Developmentt",
+							"type": "text"
+						},
+						{
+							"key": "Skill_Description",
+							"value": "A Web Developer is a professional who is responsible for the design and construction of websites. They ensure that sites meet user expectations by ensuring they look good, run smoothly and offer easy access points with no loading issues between pages or error messages.",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/skills/1",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"skills",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add skill to user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 201\", function () {",
+							"  pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - success and message\", function () {",
+							"  const responseData = pm.response.json();",
+							"",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.success).to.exist;",
+							"  pm.expect(responseData.message).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Success field is a boolean value\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.success).to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Message field is a non-empty string\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "Skill_Id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "Rate",
+							"value": "5",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/user_skills/",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"user_skills",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Skills",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate success field is true\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.success).to.be.true;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Verify that the 'user_skills' array is present and contains at least one element\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.user_skills).to.exist.and.to.be.an('array').and.to.have.lengthOf.at.least(1);",
+							"});",
+							"",
+							"",
+							"pm.test(\"User_Skill_Id is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    responseData.user_skills.forEach(function (user_skill) {",
+							"        pm.expect(user_skill.User_Skill_Id).to.be.a('number').and.to.be.at.least(0, \"User_Skill_Id should be a non-negative integer\");",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}api/user_skills/",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"user_skills",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User Skill",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the 'success' field\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.success).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"The success field should be a boolean\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.exist.and.to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the 'message' field\", function () {",
+							"    const responseData = pm.response.json();",
+							"  ",
+							"    pm.expect(responseData.message).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"The 'message' field is a string\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData.message).to.be.a('string');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "Rate",
+							"value": "4",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/user_skills/1",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"user_skills",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User Skill",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/user_skills/1",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"user_skills",
+						"1"
 					]
 				}
 			},
@@ -1330,6 +2253,57 @@
 					"path": [
 						"users",
 						"delete_profile_picture"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Skill",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Success field should be true\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.be.true;",
+							"});",
+							"",
+							"",
+							"",
+							"pm.test(\"Skill with ID 1 has been deleted from the database\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.be.true;",
+							"    pm.expect(responseData.message).to.exist",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/skills/1",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"skills",
+						"1"
 					]
 				}
 			},
@@ -1633,6 +2607,149 @@
 					"path": [
 						"users",
 						"delete_about"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Success field is present in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"The success field has a boolean value\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.success).to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"The message field is present in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.message).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Message field is a string\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.message).to.be.a('string');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "mazinislam431@gmail.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/users/reset_password",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"users",
+						"reset_password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change password using token sent to email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Success field is present in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"The success field has a boolean value\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.success).to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"The message field is present in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.message).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Message field is a string\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.message).to.be.a('string');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "password",
+							"value": "Mazin123#",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/users/reset_password/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyX0lkIjoxLCJFbWFpbCI6Im1hemluaXNsYW00MzFAZ21haWwuY29tIiwiaWF0IjoxNjkyNzMwNzI1LCJleHAiOjE2OTI3MzQzMjV9.z-VtaDUG__-Cuf5KUTfABpQ1Qp_IzeFVeQdqhihbln4",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"users",
+						"reset_password",
+						"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyX0lkIjoxLCJFbWFpbCI6Im1hemluaXNsYW00MzFAZ21haWwuY29tIiwiaWF0IjoxNjkyNzMwNzI1LCJleHAiOjE2OTI3MzQzMjV9.z-VtaDUG__-Cuf5KUTfABpQ1Qp_IzeFVeQdqhihbln4"
 					]
 				}
 			},
@@ -2000,7 +3117,7 @@
 		},
 		{
 			"key": "baseUrl",
-			"value": "https://alumni-system-backend.azurewebsites.net/",
+			"value": "",
 			"type": "string"
 		}
 	]
