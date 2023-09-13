@@ -369,6 +369,18 @@ exports.generateCV = async (req, res, next) => {
 			linkedin: user.LinkedIn_URL,
 			behance: user.Behance_URL,
 		};
+		let missing = [];
+		data.name === 'null null' ? (data.name = '') : (data.name = data.name);
+		for (const [key, value] of Object.entries(data)) {
+			if (key === 'github' || key === 'linkedin' || key === 'behance') continue;
+			if (!value) {
+				missing.push(key);
+			}
+		}
+		if (missing.length > 0) {
+			res.status(400).send({ success: false, message: 'Missing credentials.', missing });
+			return;
+		}
 		const cv = await CV(data);
 		// update cv through cloudinary
 		const cvUrl = await cloudinary.uploader.upload(cv, { folder: 'cvs' });

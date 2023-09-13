@@ -11,7 +11,7 @@ env:
 
 jobs:
   build-and-deploy:
-    name: Build
+    name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
