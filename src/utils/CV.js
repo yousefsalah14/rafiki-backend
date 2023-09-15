@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
+
 /**
  * Generates a PDF file with user data.
  * @param {Object} user - The user data.
@@ -13,7 +14,7 @@ const PDFDocument = require('pdfkit');
  * @param {string} user.github - The user's GitHub profile URL.
  * @param {string} user.linkedin - The user's LinkedIn profile URL.
  * @param {string} user.behance - The user's Behance profile URL.
- * @returns {string} The generated PDF file path.
+ * @returns {Promise<string>} A Promise that resolves with the generated PDF file path.
  * @description This function generates a PDF file with the user's data.
  */
 module.exports = async function generateCV(user = {}) {
@@ -129,5 +130,13 @@ module.exports = async function generateCV(user = {}) {
 	doc.rect(40, endOfPage - 2, 5, cprHeight).fillAndStroke('#e6e6e6');
 	doc.end();
 	doc.pipe(writeStream);
-	return path.join(__dirname, `../../public/static/${name}-CV.pdf`);
+
+	return new Promise((resolve, reject) => {
+		writeStream.on('finish', () => {
+			resolve(path.join(__dirname, `../../public/static/${name}-CV.pdf`));
+		});
+		writeStream.on('error', (err) => {
+			reject(err);
+		});
+	});
 };
