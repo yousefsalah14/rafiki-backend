@@ -2,6 +2,7 @@ const user_util = require('../utils/user_util');
 const { CLOUDINARY_API_SECRET } = require('../config/config');
 const CV = require('../utils/CV');
 const cloudinary = require('cloudinary').v2;
+const fs = require('fs');
 cloudinary.config({
 	cloud_name: 'do6oz83pz',
 	api_key: '524566722143567',
@@ -352,6 +353,7 @@ exports.updatePosition = async (req, res, next) => {
 exports.generateCV = async (req, res, next) => {
 	try {
 		const { UserName } = req.body.session;
+		const { Job_Title } = req.query;
 		const user = await user_util.getUser(UserName);
 		if (!user) {
 			res.status(404).send({ success: false, message: 'User not found.' });
@@ -360,7 +362,7 @@ exports.generateCV = async (req, res, next) => {
 		const skills = user.UserSkills.map((skill) => skill.Skill_Name);
 		data = {
 			name: user.FirstName + ' ' + user.LastName,
-			position: user.Job_Title,
+			position: Job_Title,
 			phone: user.Phone,
 			email: user.Email,
 			about: user.About,
@@ -386,6 +388,7 @@ exports.generateCV = async (req, res, next) => {
 		const cvUrl = await cloudinary.uploader.upload(cv, { folder: 'cvs' });
 		await user_util.uploadCV(user.User_Id, cvUrl.secure_url);
 		res.status(200).send({ success: true, cvUrl: cvUrl.secure_url });
+		fs.unlinkSync(cv);
 	} catch (err) {
 		next(err);
 	}
