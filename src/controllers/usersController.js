@@ -359,6 +359,10 @@ exports.generateCV = async (req, res, next) => {
 			res.status(404).send({ success: false, message: 'User not found.' });
 			return;
 		}
+		if (user.CV) {
+			const public_id = 'cvs/' + user.CV.split('/').slice(-1)[0].split('.')[0];
+			await cloudinary.uploader.destroy(public_id);
+		}
 		const skills = user.UserSkills.map((skill) => skill.Skill_Name);
 		data = {
 			name: user.FirstName + ' ' + user.LastName,
@@ -370,6 +374,7 @@ exports.generateCV = async (req, res, next) => {
 			github: user.GitHub_URL,
 			linkedin: user.LinkedIn_URL,
 			behance: user.Behance_URL,
+			Img: user.Img,
 		};
 		let missing = [];
 		data.name === 'null null' ? (data.name = '') : (data.name = data.name);

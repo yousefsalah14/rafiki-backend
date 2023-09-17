@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
-
+const client = require('https');
 /**
  * Generates a PDF file with user data.
  * @param {Object} user - The user data.
@@ -28,12 +28,32 @@ module.exports = async function generateCV(user = {}) {
 		github = '',
 		linkedin = '',
 		behance = '',
+		Img = '',
 	} = user;
 
 	const firstHalfOfSkills = skills.slice(0, Math.ceil(skills.length / 2));
 	const secondHalfOfSkills = skills.slice(Math.ceil(skills.length / 2));
 	const skillsLength = Math.max(firstHalfOfSkills.length, secondHalfOfSkills.length);
 
+	// download the user's profile picture
+	const profilePicture = fs.createWriteStream(path.join(__dirname, `../../public/static/${name}.jpg`));
+	await new Promise((resolve, reject) => {
+		const options = {
+			timeout: 10000, // set the timeout to 5 seconds
+		};
+		client.get(Img, options, (response) => {
+			response
+				.pipe(profilePicture)
+				.on('finish', () => {
+					profilePicture.close(resolve);
+				})
+				.on('error', (err) => {
+					fs.unlinkSync(path.join(__dirname, `../../public/static/${name}.jpg`));
+					console.log(`Error downloading profile picture: ${err}`);
+					reject(err);
+				});
+		});
+	});
 	const doc = new PDFDocument({
 		margin: 30,
 		size: 'A4',
@@ -60,7 +80,7 @@ module.exports = async function generateCV(user = {}) {
 	// add the header section with user data
 	doc.rect(0, 30, 620, 105).fill('#d9d9d9');
 	doc
-		.image('public/static/vector.jpg', 20, 45, { width: 75, height: 75, align: 'left' })
+		.image(`public/static/${name}.jpg`, 20, 45, { width: 75, height: 75, align: 'left' })
 		.fillColor('#0097B2')
 		.fontSize(24)
 		.font(DM_Sans_Bold)
@@ -71,7 +91,8 @@ module.exports = async function generateCV(user = {}) {
 		.text(position.toUpperCase(), 110, 85, { characterSpacing: 2.5 })
 		.fontSize(10)
 		.text(`Phone: ${phone}`, 200, 50, { align: 'right' })
-		.text(`Email: ${email}`, 200, 65, { align: 'right' });
+		.text(`Email: ${email}`, 200, 65, { align: 'right' })
+		.fontSize(8);
 	if (github) {
 		doc.fillColor('#333FFF').text(github, 200, 80, {
 			align: 'right',
@@ -133,6 +154,8 @@ module.exports = async function generateCV(user = {}) {
 
 	return new Promise((resolve, reject) => {
 		writeStream.on('finish', () => {
+			// remove the user's profile picture
+			fs.unlinkSync(path.join(__dirname, `../../public/static/${name}.jpg`));
 			resolve(path.join(__dirname, `../../public/static/${name}-CV.pdf`));
 		});
 		writeStream.on('error', (err) => {
