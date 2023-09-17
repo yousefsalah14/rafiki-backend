@@ -1,6 +1,6 @@
 const user_util = require('../utils/user_util');
 const { CLOUDINARY_API_SECRET } = require('../config/config');
-const CV = require('../utils/CV');
+const cvGenerator = require('../utils/CV');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 cloudinary.config({
@@ -388,12 +388,18 @@ exports.generateCV = async (req, res, next) => {
 			res.status(400).send({ success: false, message: 'Missing credentials.', missing });
 			return;
 		}
-		const cv = await CV(data);
-		// update cv through cloudinary
-		const cvUrl = await cloudinary.uploader.upload(cv, { folder: 'cvs' });
-		await user_util.uploadCV(user.User_Id, cvUrl.secure_url);
-		res.status(200).send({ success: true, cvUrl: cvUrl.secure_url });
-		fs.unlinkSync(cv);
+		cvGenerator(data)
+			.then(async (cv) => {
+				// update cv through cloudinary
+				const cvUrl = await cloudinary.uploader.upload(cv, { folder: 'cvs' });
+				await user_util.uploadCV(user.User_Id, cvUrl.secure_url);
+				res.status(200).send({ success: true, cvUrl: cvUrl.secure_url });
+				fs.unlinkSync(cv);
+			})
+			.catch((err) => {
+				console.log(err);
+				throw new Error(err);
+			});
 	} catch (err) {
 		next(err);
 	}
