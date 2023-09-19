@@ -1,4 +1,5 @@
 const user_util = require('../utils/user_util');
+const auth_util = require('../utils/auth_util');
 const path = require('path');
 const { sendEmail } = require('../utils/mail_util');
 const { FRONTEND_URL } = require('../config/config');
@@ -10,23 +11,11 @@ exports.login = async (req, res, next) => {
 			res.status(400).send({ success: false, message: 'Missing credentials.' });
 			return;
 		}
-		const user = await user_util.getUser(UserName);
-		if (!user) {
-			res.status(404).send({ success: false, message: 'User not found.' });
-			return;
-		}
-		const isMatch = await user_util.comparePassword(Password, user.Password);
-		if (!isMatch) {
-			res.status(401).send({ success: false, message: 'Invalid credentials.' });
-			return;
-		}
-		// console.log(user);
+		const user = await auth_util.login(UserName, Password);
 		req.session.RoleName = user.Role.Role_Name;
 		req.session.IsLoggedIn = true;
 		req.session.User_Id = user.User_Id;
 		req.session.UserName = user.UserName;
-		// how use the custom field in session
-
 		res.status(200).send({
 			success: true,
 			actor: user.Role.Role_Name,
@@ -36,7 +25,18 @@ exports.login = async (req, res, next) => {
 			message: 'User logged in successfully.',
 		});
 	} catch (err) {
-		next(err);
+		if (err.message === 'User not found') {
+			// user not found
+			res.status(404).send({ success: false, message: 'User not found.' });
+			return;
+		} else if (err.message === 'Invalid credentials') {
+			// invalid credentials
+			res.status(401).send({ success: false, message: 'Invalid credentials.' });
+			return;
+		} else {
+			// internal server error
+			next(err);
+		}
 	}
 };
 

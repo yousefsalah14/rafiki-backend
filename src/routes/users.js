@@ -22,6 +22,10 @@ router.get('/get_student', isStudent, usersController.getStudent);
 
 router.get('/get_hr', isHR, usersController.getHR);
 
+router.post('/professor_signup', usersController.addProfessor);
+
+router.get('/get_professor', isProfessor, usersController.getProfessor);
+
 router.post('/check_national_id', usersController.checkNationalIdExists);
 
 router.post('/check_email', usersController.checkEmailExists);

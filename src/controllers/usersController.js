@@ -114,6 +114,38 @@ exports.getHR = async (req, res, next) => {
 	}
 };
 
+exports.addProfessor = async (req, res, next) => {
+	try {
+		const { UserName, Password, Email } = req.body;
+		if (!UserName || !Password || !Email) {
+			res.status(400).send({ success: false, message: 'Missing credentials.' });
+			return;
+		}
+		if ((await user_util.checkEmailExists(Email)) || (await user_util.checkUserNameExists(UserName))) {
+			res.status(400).send({ success: false, message: 'Email or National Id or User Name already exists.' });
+			return;
+		}
+		await user_util.addProfessor(UserName, Password, Email);
+		res.status(201).send({ success: true, message: 'Professor added successfully.' });
+	} catch (err) {
+		next(err);
+	}
+};
+
+exports.getProfessor = async (req, res, next) => {
+	try {
+		const { UserName } = req.body.session;
+		const professor = await user_util.getProfessor(UserName);
+		if (!professor) {
+			res.status(404).send({ success: false, message: 'Professor not found.' });
+			return;
+		}
+		res.status(200).send({ success: true, professor });
+	} catch (err) {
+		next(err);
+	}
+};
+
 exports.getFullUser = async (req, res, next) => {
 	try {
 		const { UserName } = req.body.session;

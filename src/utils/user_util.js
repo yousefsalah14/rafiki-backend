@@ -55,6 +55,14 @@ const getAlumni = async (UserName) => {
 	}
 };
 
+const getUserById = async (User_Id) => {
+	try {
+		return await User.findOne({ where: { User_Id } });
+	} catch (error) {
+		throw error;
+	}
+};
+
 const comparePassword = async (password, hashedPassword) => {
 	try {
 		const isMatch = await bcrypt.compare(password, hashedPassword);
@@ -338,7 +346,7 @@ const getUser = async (UserName) => {
 				id: skill.Users_Skills.User_Skill_Id,
 			};
 		});
-
+		dataValues.Password = undefined;
 		return dataValues;
 	} catch (err) {
 		throw err;
@@ -528,7 +536,49 @@ async function updatePassword(User_Id, password) {
 	}
 }
 
-//TODO: add professor
+/**
+ * Add a new professor.
+ * @param {string} UserName - The professor's username.
+ * @param {string} Password - The professor's password.
+ * @param {string} Email - The professor's email address.
+ * @returns {Promise} A promise that resolves to the created professor.
+ * @throws {Error} If there was an error adding the professor.
+ */
+async function addProfessor(UserName, Password, Email) {
+	try {
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(Password, salt);
+		await User.create({
+			UserName: UserName,
+			Password: hashedPassword,
+			Email: Email,
+			Role_Id: PROFESSOR_ROLE_ID,
+		});
+	} catch (err) {
+		throw err;
+	}
+}
+
+/**
+ * Get a professor by username.
+ * @param {string} UserName - The username of the professor to be retrieved.
+ * @returns {Promise} A promise that resolves to the retrieved professor.
+ * @throws {Error} If there was an error retrieving the professor.
+ */
+async function getProfessor(UserName) {
+	try {
+		const professor = await User.findOne({
+			where: {
+				UserName: UserName,
+				Role_Id: PROFESSOR_ROLE_ID,
+			},
+		});
+		professor.Password = undefined;
+		return professor;
+	} catch (err) {
+		throw err;
+	}
+}
 
 // export the functions
 
@@ -565,4 +615,7 @@ module.exports = {
 	updatePassword,
 	getUserSessions,
 	updateJobTitle,
+	getUserById,
+	addProfessor,
+	getProfessor,
 };
