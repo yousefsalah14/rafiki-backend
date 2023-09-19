@@ -1402,7 +1402,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Job Type",
+			"name": "Add Job Category",
 			"event": [
 				{
 					"listen": "test",
@@ -1477,7 +1477,7 @@
 			"response": []
 		},
 		{
-			"name": "Get All job types",
+			"name": "Get All job categories",
 			"event": [
 				{
 					"listen": "test",
@@ -1510,13 +1510,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}api/jobs/get-job-types",
+					"raw": "{{baseUrl}}api/jobs/get-job-categories",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
 						"jobs",
-						"get-job-types"
+						"get-job-categories"
 					]
 				}
 			},
@@ -2079,6 +2079,39 @@
 			"response": []
 		},
 		{
+			"name": "Get Applications For a job Copy",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "Job_Application_Id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "Status",
+							"value": "Accepted",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/jobs/update-job-application-status",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"jobs",
+						"update-job-application-status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Applications For a job",
 			"event": [
 				{
@@ -2178,39 +2211,6 @@
 						"jobs",
 						"job-applications",
 						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Applications For a job Copy",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "Job_Application_Id",
-							"value": "1",
-							"type": "text"
-						},
-						{
-							"key": "Status",
-							"value": "Accepted",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{baseUrl}}api/jobs/update-job-application-status",
-					"host": [
-						"{{baseUrl}}api"
-					],
-					"path": [
-						"jobs",
-						"update-job-application-status"
 					]
 				}
 			},
