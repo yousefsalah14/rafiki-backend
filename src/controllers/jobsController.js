@@ -152,9 +152,9 @@ exports.addJobPost = async (req, res, next) => {
 	}
 };
 
-exports.getAllJobTypes = async (req, res, next) => {
+exports.getAllJobCategories = async (req, res, next) => {
 	try {
-		const job_types = await job_util.getAllJobTypes();
+		const job_types = await job_util.getAllJobCategories();
 		res.status(200).json(job_types);
 	} catch (error) {
 		next(error);

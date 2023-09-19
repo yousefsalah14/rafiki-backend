@@ -85,7 +85,7 @@ exports.getJobTypeById = async (Job_Category_Id) => {
  * @returns {Promise} A promise that resolves to the retrieved job types.
  * @throws {Error} If there was an error retrieving the job types.
  */
-exports.getAllJobTypes = async () => {
+exports.getAllJobCategories = async () => {
 	try {
 		return await Job_Category.findAll();
 	} catch (error) {

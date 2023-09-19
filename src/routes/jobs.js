@@ -6,7 +6,7 @@ router.post('/add-job-category', isHR, jobsController.addJobCategory);
 
 router.post('/add-job-post', isHR, jobsController.addJobPost);
 
-router.get('/get-job-types', isHR, jobsController.getAllJobTypes);
+router.get('/get-job-categories', isHR, jobsController.getAllJobCategories);
 
 router.get('/get-job-post/:Job_Id', isAuthorized, jobsController.getJobPostById);
 
