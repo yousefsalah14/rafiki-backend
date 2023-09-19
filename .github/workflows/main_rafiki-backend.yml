@@ -11,6 +11,8 @@ env:
 
 jobs:
   build-and-deploy:
+    environment:
+      name: 'Production'
     name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
