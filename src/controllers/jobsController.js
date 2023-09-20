@@ -251,6 +251,16 @@ exports.deleteJobPost = async (req, res, next) => {
 	}
 };
 
+exports.deleteJobCategory = async (req, res, next) => {
+	try {
+		const { Job_Category_Id } = req.params;
+		const job_category = await job_util.deleteJobCategory(Job_Category_Id);
+		res.status(200).json(job_category);
+	} catch (error) {
+		next(error);
+	}
+};
+
 function checkMissingFields(required) {
 	missing_fields = [];
 	for (const [key, value] of Object.entries(required)) {

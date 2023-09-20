@@ -292,3 +292,18 @@ exports.deleteJobPost = async (Job_Id) => {
 		throw error;
 	}
 };
+
+/**
+ * Delete a job category.
+ * @param {Number} Job_Category_Id - The id of the job category to be deleted.
+ * @returns {Promise} A promise that resolves to the deleted job category.
+ * @throws {Error} If there was an error deleting the job category.
+ */
+exports.deleteJobCategory = async (Job_Category_Id) => {
+	try {
+		return await Job_Category.destroy({ where: { Job_Category_Id } });
+	} catch (error) {
+		console.error('Error deleting job category:', error);
+		throw error;
+	}
+};

@@ -2079,7 +2079,49 @@
 			"response": []
 		},
 		{
-			"name": "Get Applications For a job Copy",
+			"name": "Update Job application status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    pm.expect(pm.response.json()).to.be.an('array');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Array contains at least one element\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Array element is a number\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData[0]).to.be.a('number');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Array element is equal to 0\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData[0]).to.equal(1);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -2094,6 +2136,7 @@
 						{
 							"key": "Status",
 							"value": "Accepted",
+							"description": "'Pending', 'Accepted', 'Rejected'",
 							"type": "text"
 						}
 					]
@@ -3835,6 +3878,58 @@
 					],
 					"path": [
 						"skills",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Job Category",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Success field should be true\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.be.true;",
+							"});",
+							"",
+							"",
+							"",
+							"pm.test(\"Skill with ID 1 has been deleted from the database\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.be.true;",
+							"    pm.expect(responseData.message).to.exist",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/jobs/delete-job-category/1",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"jobs",
+						"delete-job-category",
 						"1"
 					]
 				}
