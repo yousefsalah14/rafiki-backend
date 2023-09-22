@@ -13,10 +13,7 @@ describe('jobsController', () => {
 			res.status = sinon.stub().returns(res);
 			res.json = sinon.stub().returns(res);
 			const next = sinon.spy();
-			console.log('res before:', res);
 			await jobsController.addJobPost(req, res, next);
-			console.log('res after:', res);
-
 			expect(res.status.calledWith(400)).to.be.true;
 			expect(res.json.calledWith({ message: 'No data provided' })).to.be.true;
 		});
@@ -33,7 +30,7 @@ describe('jobsController', () => {
 					Company_Email: 'test',
 					Location: 'test',
 					Job_Category_Id: 'test',
-					isInternship: 'test',
+					isInternship: false,
 					Job_Skills: [1],
 				},
 			};
@@ -43,7 +40,12 @@ describe('jobsController', () => {
 			const next = sinon.spy();
 			await jobsController.addJobPost(req, res, next);
 			expect(res.status.calledWith(400)).to.be.true;
-			expect(res.json.calledWith({ message: 'Job Required fields missing', missing_fields: ['Job_Type'] })).to.be.true;
+			expect(
+				res.json.calledWith({
+					message: 'Job Required fields missing',
+					missing_fields: ['Job_Type', 'Job_Requirements'],
+				})
+			).to.be.true;
 		});
 
 		it('should return a 400 status code if the request body is missing required fields for internship', async () => {
@@ -60,6 +62,7 @@ describe('jobsController', () => {
 					isInternship: true,
 					Job_Type: 'test',
 					Job_Skills: [1],
+					Job_Requirements: 'test',
 					session: {
 						User_Id: 1,
 					},
@@ -92,6 +95,7 @@ describe('jobsController', () => {
 					Job_Category_Id: 1,
 					isInternship: false,
 					Job_Type: 'test',
+					Job_Requirements: 'test',
 					Job_Skills: [1],
 					session: {
 						User_Id: 1,
@@ -122,6 +126,7 @@ describe('jobsController', () => {
 					Job_Category_Id: 1,
 					isInternship: false,
 					Job_Type: 'test',
+					Job_Requirements: 'test',
 					Job_Skills: [1],
 					session: {
 						User_Id: 1,
@@ -154,7 +159,9 @@ describe('jobsController', () => {
 					Job_Category_Id: 1,
 					isInternship: false,
 					Job_Type: 'test',
+					Job_Requirements: 'test',
 					Job_Skills: [1],
+					Job_Time: 'Full-time',
 					session: {
 						User_Id: 1,
 					},

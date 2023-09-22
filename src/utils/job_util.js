@@ -136,6 +136,7 @@ exports.getJobPosts = async (page, limit) => {
 		const job_posts = await Job_Post.findAll({
 			offset: page * limit,
 			limit,
+			order: [['createdAt', 'DESC']],
 			include: [
 				{
 					model: Job_Skills,

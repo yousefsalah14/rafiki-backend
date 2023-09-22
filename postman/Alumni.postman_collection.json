@@ -1588,7 +1588,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Job_Title\": \"Full Stack Developer\",\r\n    \"Description\": \"We are looking for a Full Stack Developer to join our team!\",\r\n    \"Company_Name\": \"Acme Inc.\",\r\n    \"Company_Logo\": \"https://example.com/logo.png\",\r\n    \"Company_Size\": \"100-500 employees\",\r\n    \"Contact_Info\": \"John Doe\",\r\n    \"Company_Email\": \"jobs@acme.com\",\r\n    \"External_Link\": \"https://acme.com/careers\",\r\n    \"Location\": \"New York, NY\",\r\n    \"Application_Deadline\": \"2022-12-31\",\r\n    \"Job_Category_Id\": 1,\r\n    \"Salary\": 5000,\r\n    \"Publisher_Id\": 1,\r\n    \"isInternship\": false,\r\n    \"Duration\": null,\r\n    \"Job_Type\": \"onsite\",\r\n    \"Education_Level\": \"graduate\",\r\n    \"Job_Skills\": [1]\r\n}",
+					"raw": "{\r\n    \"Job_Title\": \"Full Stack Developer\",\r\n    \"Description\": \"We are looking for a Full Stack Developer to join our team!\",\r\n    \"Company_Name\": \"Acme Inc.\",\r\n    \"Company_Logo\": \"https://example.com/logo.png\",\r\n    \"Company_Size\": \"100-500 employees\",\r\n    \"Contact_Info\": \"John Doe\",\r\n    \"Company_Email\": \"jobs@acme.com\",\r\n    \"External_Link\": \"https://acme.com/careers\",\r\n    \"Location\": \"New York, NY\",\r\n    \"Application_Deadline\": \"2022-12-31\",\r\n    \"Job_Category_Id\": 1,\r\n    \"Salary\": 5000,\r\n    \"Publisher_Id\": 1,\r\n    \"isInternship\": false,\r\n    \"Duration\": null,\r\n    \"Job_Type\": \"onsite\", // 'remote', 'onsite', 'hybrid'\r\n    \"Education_Level\": \"graduate\", // 'undergraduate', 'graduate', 'both'\r\n    \"Job_Skills\": [1],\r\n    \"Job_Requirements\": \"test\",\r\n    \"Job_Time\": \"Full-time\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -3895,21 +3895,15 @@
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"",
-							"pm.test(\"Success field should be true\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData.success).to.be.true;",
+							"pm.test(\"The response should be a string\", function () {",
+							"    pm.expect(pm.response.text()).to.be.a('string');",
 							"});",
 							"",
 							"",
-							"",
-							"pm.test(\"Skill with ID 1 has been deleted from the database\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData.success).to.be.true;",
-							"    pm.expect(responseData.message).to.exist",
-							"});"
+							"pm.test(\"Verify that the response is 1\", function () {",
+							"    pm.expect(pm.response.text()).to.equal(\"1\");",
+							"});",
+							""
 						],
 						"type": "text/javascript"
 					}

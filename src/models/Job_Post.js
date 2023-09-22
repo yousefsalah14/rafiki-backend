@@ -32,7 +32,7 @@ Job_Post.init(
 		Company_Size: {
 			type: DataTypes.STRING,
 		},
-		Contact_Info: {
+		Job_Requirements: {
 			type: DataTypes.TEXT,
 		},
 		Company_Email: {
@@ -80,6 +80,11 @@ Job_Post.init(
 			type: DataTypes.ENUM('undergraduate', 'graduate', 'both'),
 			allowNull: false,
 			defaultValue: 'both',
+		},
+		Job_Time: {
+			type: DataTypes.ENUM('Part-time', 'Full-time'),
+			allowNull: false,
+			defaultValue: 'Full-time',
 		},
 	},
 	{

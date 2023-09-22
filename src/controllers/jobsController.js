@@ -32,7 +32,6 @@ exports.addJobCategory = async (req, res, next) => {
  * @param {string} req.body.Company_Name - The name of the company posting the job.
  * @param {string} req.body.Company_Logo - The URL of the company logo.
  * @param {string} req.body.Company_Size - The size of the company.
- * @param {string} req.body.Contact_Info - The contact information for the job posting.
  * @param {string} req.body.Company_Email - The email address of the company posting the job.
  * @param {string} req.body.External_Link - The external link for the job posting.
  * @param {string} req.body.Location - The location of the job.
@@ -62,7 +61,6 @@ exports.addJobPost = async (req, res, next) => {
 			Company_Name,
 			Company_Logo,
 			Company_Size,
-			Contact_Info,
 			Company_Email,
 			External_Link,
 			Location,
@@ -74,26 +72,31 @@ exports.addJobPost = async (req, res, next) => {
 			Job_Type,
 			Education_Level,
 			Job_Skills,
+			Job_Requirements,
+			Job_Time,
 		} = req.body;
 		const required = {
 			Job_Title,
 			Description,
 			Company_Name,
 			Company_Size,
-			Contact_Info,
-			Company_Email,
 			Location,
 			Job_Category_Id,
 			isInternship,
 			Job_Type,
 			Job_Skills,
+			Job_Requirements,
 		};
+		if (!Company_Email && !External_Link) {
+			res.status(400).json({ message: 'Missing contact info', missing_fields: ['Company_Email', 'External_Link'] });
+			return;
+		}
 		if (checkMissingFields(required).length > 0) {
 			res.status(400).json({ message: 'Job Required fields missing', missing_fields });
 			return;
 		}
 		const Publisher_Id = req.body.session.User_Id;
-		if (isInternship) {
+		if (isInternship === true) {
 			const requiredForInternship = { Duration, Education_Level };
 			console.log('requiredForInternship', requiredForInternship);
 			if (checkMissingFields(requiredForInternship).length > 0) {
@@ -126,7 +129,6 @@ exports.addJobPost = async (req, res, next) => {
 			Company_Name,
 			Company_Logo,
 			Company_Size,
-			Contact_Info,
 			Company_Email,
 			External_Link,
 			Location,
@@ -138,6 +140,8 @@ exports.addJobPost = async (req, res, next) => {
 			Duration,
 			Job_Type,
 			Education_Level,
+			Job_Requirements,
+			Job_Time,
 		};
 		const job_post_created = await job_util.addJobPost(data);
 		// array of job skills to be added to the job_skills table
