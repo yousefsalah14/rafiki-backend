@@ -4,7 +4,7 @@ const jobsController = require('../controllers/jobsController');
 const job_util = require('../utils/job_util');
 const user_util = require('../utils/user_util');
 const skills_util = require('../utils/skills_util');
-
+const TelegramBot = require('../services/TelegramBot');
 describe('jobsController', () => {
 	describe('addJobPost', () => {
 		it('should return a 400 status code if the request body is empty', async () => {
@@ -175,10 +175,18 @@ describe('jobsController', () => {
 			sinon.stub(skills_util, 'getSkillById').returns({ Skill_Id: 1 });
 			sinon.stub(job_util, 'addJobPost').returns({ Job_Id: 1 });
 			sinon.stub(job_util, 'addJobSkills').returns({ Skill_Id: 1, Job_Id: 1 });
+			// change the telegram bot to a fake one
+			const telegramBot = new TelegramBot('fake_token', 'fake_chat_id');
+			sinon.stub(telegramBot, 'sendMessage').returns(true);
 			await jobsController.addJobPost(req, res, next);
 			expect(res.status.calledWith(200)).to.be.true;
-			expect(res.json.calledWith({ job_post_created: { Job_Id: 1 }, createdSkills: { Skill_Id: 1, Job_Id: 1 } })).to.be
-				.true;
+			expect(
+				res.json.calledWith({
+					job_post_created: { Job_Id: 1 },
+					createdSkills: { Skill_Id: 1, Job_Id: 1 },
+					messageSentSuccessfully: true,
+				})
+			).to.be.true;
 			job_util.getJobTypeById.restore();
 			skills_util.getSkillById.restore();
 			job_util.addJobPost.restore();
