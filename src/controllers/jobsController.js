@@ -1,6 +1,8 @@
 const job_util = require('../utils/job_util');
 const user_util = require('../utils/user_util');
 const skills_util = require('../utils/skills_util');
+const TelegramBot = require('../services/TelegramBot');
+const { TELEGRAM_TOKEN, TELEGRAM_CHAT_ID } = require('../config/config');
 
 // create a job type
 exports.addJobCategory = async (req, res, next) => {
@@ -55,6 +57,7 @@ exports.addJobPost = async (req, res, next) => {
 		if (!req.body) {
 			res.status(400).json({ message: 'No data provided' });
 		}
+		const bot = new TelegramBot(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID);
 		const {
 			Job_Title,
 			Description,
@@ -148,9 +151,24 @@ exports.addJobPost = async (req, res, next) => {
 		const job_skills = Job_Skills.map((skill_id) => {
 			return { Skill_Id: skill_id, Job_Id: job_post_created.Job_Id };
 		});
-		console.log(job_skills);
 		const createdSkills = await job_util.addJobSkills(job_skills);
-		res.status(200).json({ job_post_created, createdSkills });
+		const formattedDeadline = job_post_created.Application_Deadline?.toLocaleDateString('en-US', {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+		});
+		const message = `
+			<strong>There is a new job posted on Rafiki! 🚀</strong>\n<strong>Job Title:</strong> ${
+				job_post_created.Job_Title
+			} 👀\n<strong>Company:</strong> ${job_post_created.Company_Name} 🏢\n${
+			job_post_created.Application_Deadline ? `<strong>Deadline:</strong> ${formattedDeadline} 📅\n` : ''
+		}<strong>Location:</strong> ${
+			job_post_created.Location
+		} 📍\nFor more info visit <a href="https://www.example.com/jobs/jobid">Rafiki</a>\n
+		`;
+		const messageResult = await bot.sendMessage(message);
+		res.status(200).json({ job_post_created, createdSkills, messageSentSuccessfully: messageResult });
 	} catch (error) {
 		next(error);
 	}
