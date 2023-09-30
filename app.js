@@ -110,6 +110,7 @@ app.use('/api/admin', require('./src/routes/admin'));
 app.use('/api/skills', require('./src/routes/skills'));
 app.use('/api/user_skills', require('./src/routes/user_skills'));
 app.use('/api/jobs', require('./src/routes/jobs'));
+app.use('/api/auth', require('./src/routes/auth'));
 
 // 404 middleware
 app.use((req, res, next) => {

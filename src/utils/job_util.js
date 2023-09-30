@@ -13,6 +13,15 @@ const Skill = require('../models/Skill');
  */
 exports.addJobSkills = async (job_skills) => {
 	try {
+		// CHECK IF JOB_SKILLS EXISTS
+		const job_skills_exists = await Job_Skills.findAll({
+			where: { Job_Id: job_skills[0].Job_Id },
+		});
+		if (job_skills_exists.length > 0) {
+			await Job_Skills.destroy({
+				where: { Job_Id: job_skills[0].Job_Id },
+			});
+		}
 		return await Job_Skills.bulkCreate(job_skills);
 	} catch (error) {
 		console.error('Error adding job skill:', error);

@@ -63,7 +63,7 @@ Users.init(
 			type: DataTypes.STRING,
 		},
 		Date_Of_Birth: {
-			type: DataTypes.DATE,
+			type: DataTypes.DATEONLY,
 		},
 		Country: {
 			type: DataTypes.STRING,
