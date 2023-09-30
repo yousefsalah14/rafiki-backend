@@ -2,7 +2,7 @@ const job_util = require('../utils/job_util');
 const user_util = require('../utils/user_util');
 const skills_util = require('../utils/skills_util');
 const TelegramBot = require('../services/TelegramBot');
-const { TELEGRAM_TOKEN, TELEGRAM_CHAT_ID } = require('../config/config');
+const { TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, FRONTEND_URL } = require('../config/config');
 
 // create a job type
 exports.addJobCategory = async (req, res, next) => {
@@ -167,9 +167,9 @@ exports.addJobPost = async (req, res, next) => {
 				job_post_created.Job_Title
 			} 👀\n<strong>Company:</strong> ${job_post_created.Company_Name} 🏢\n${
 			job_post_created.Application_Deadline ? `<strong>Deadline:</strong> ${formattedDeadline} 📅\n` : ''
-		}<strong>Location:</strong> ${
-			job_post_created.Location
-		} 📍\nFor more info visit <a href="https://www.example.com/jobs/jobid">Rafiki</a>\n
+		}<strong>Location:</strong> ${job_post_created.Location} 📍\nFor more info visit <a href="${
+			FRONTEND_URL + 'dashboard/applyJob/' + job_post_created.Job_Id
+		}">Rafiki</a>\n
 		`;
 		if (notification) {
 			const messageResult = await bot.sendMessage(message);
