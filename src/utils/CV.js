@@ -56,7 +56,10 @@ module.exports = async function generateCV(user = {}) {
 					});
 			});
 		});
-
+		// check if the image was downloaded successfully
+		if (!fs.existsSync(path.join(__dirname, `../../public/static/${name}.jpg`))) {
+			throw new Error('Error downloading profile picture');
+		}
 		const doc = new PDFDocument({
 			margin: 30,
 			size: 'A4',

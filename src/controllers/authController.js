@@ -1,8 +1,61 @@
 const user_util = require('../utils/user_util');
+const { ALUMNI_ROLE_ID, STUDENT_ROLE_ID, HR_ROLE_ID, ADMIN_ROLE_ID, PROFESSOR_ROLE_ID } = require('../utils/util');
 const auth_util = require('../utils/auth_util');
 const path = require('path');
 const { sendEmail } = require('../utils/mail_util');
 const { FRONTEND_URL } = require('../config/config');
+
+function checkMissingFields(required) {
+	missing_fields = [];
+	for (const [key, value] of Object.entries(required)) {
+		if (value === undefined || value === null || value === '') {
+			missing_fields.push(key);
+		}
+	}
+	return missing_fields;
+}
+
+/**
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @description This function registers a user.
+ * @async
+ * @throws {Error} If there was an error registering the user.
+ * @throws {Error} If the user is already registered.
+ * @throws {Error} If the role is invalid.
+ * @returns {Promise} A promise that resolves to the registered user.
+ */
+exports.register = async (req, res, next) => {
+	try {
+		if (!req.body) {
+			res.status(400).json({ success: false, message: 'No data provided' });
+			return;
+		}
+		const { UserName, Password, Email, Role_Id, Date_Of_Birth, FirstName, LastName } = req.body;
+		const required = { UserName, Password, Email, Role_Id, Date_Of_Birth, FirstName, LastName };
+		const missing_fields = checkMissingFields(required);
+		if (missing_fields.length > 0) {
+			res.status(400).json({ success: false, message: 'Missing credentials.', missing_fields });
+			return;
+		}
+		// check if user already exists
+		if ((await user_util.checkEmailExists(Email)) || (await user_util.checkUserNameExists(UserName))) {
+			res.status(409).send({ success: false, message: 'User already exists.' });
+			return;
+		}
+		// check if admin or professor if so forbid registration
+		if (Role_Id === ADMIN_ROLE_ID || Role_Id === PROFESSOR_ROLE_ID) {
+			res.status(403).json({ success: false, message: 'Forbidden.' });
+			return;
+		}
+		const user = await auth_util.register(required);
+		res.status(201).json({ success: true, message: 'User created successfully.', user });
+	} catch (err) {
+		next(err);
+	}
+};
 
 exports.login = async (req, res, next) => {
 	try {

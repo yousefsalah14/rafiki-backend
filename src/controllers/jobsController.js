@@ -77,7 +77,9 @@ exports.addJobPost = async (req, res, next) => {
 			Job_Skills,
 			Job_Requirements,
 			Job_Time,
+			notification,
 		} = req.body;
+		notification === undefined ? true : notification;
 		const required = {
 			Job_Title,
 			Description,
@@ -167,8 +169,12 @@ exports.addJobPost = async (req, res, next) => {
 			job_post_created.Location
 		} 📍\nFor more info visit <a href="https://www.example.com/jobs/jobid">Rafiki</a>\n
 		`;
-		const messageResult = await bot.sendMessage(message);
-		res.status(200).json({ job_post_created, createdSkills, messageSentSuccessfully: messageResult });
+		if (notification) {
+			const messageResult = await bot.sendMessage(message);
+			res.status(200).json({ job_post_created, createdSkills, messageSentSuccessfully: messageResult });
+			return;
+		}
+		res.status(200).json({ job_post_created, createdSkills });
 	} catch (error) {
 		next(error);
 	}

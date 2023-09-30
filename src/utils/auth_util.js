@@ -34,3 +34,14 @@ exports.login = async (UserName, Password) => {
 	}
 	return user;
 };
+
+exports.register = async (data) => {
+	const salt = await bcrypt.genSalt(10);
+	const hashedPassword = await bcrypt.hash(data.Password, salt);
+	const user = await User.create({
+		...data,
+		Password: hashedPassword,
+	});
+	user.Password = undefined;
+	return user;
+};

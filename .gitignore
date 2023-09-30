@@ -132,3 +132,5 @@ dist
 # ignore config folder 
 config
 config/*
+
+migrations

@@ -3,18 +3,13 @@ const usersController = require('../controllers/usersController');
 const authController = require('../controllers/authController');
 const { isAlumni, isStudent, isHR, isAuthorized, isAlumniOrStudent, isProfessor } = require('../middlewares/Auth');
 
-router.post('/alumni_signup', usersController.addAlumni);
-
-router.post('/student_signup', usersController.addStudent);
-
-router.post('/hr_signup', usersController.addHR);
-
-router.post('/login', authController.login);
-
-// check if user is logged in
-router.get('/is_logged_in', isAuthorized, authController.isLoggedIn);
-
-router.get('/logout', isAuthorized, authController.logout);
+//! Deprecated routes - do not use
+router.post('/alumni_signup', usersController.addAlumni); // Use /auth/register instead
+router.post('/student_signup', usersController.addStudent); // Use /auth/register instead
+router.post('/hr_signup', usersController.addHR); // Use /auth/register instead
+router.get('/is_logged_in', isAuthorized, authController.isLoggedIn); // Use /auth/status instead
+router.get('/logout', isAuthorized, authController.logout); // Use /auth/logout instead
+//! End of deprecated routes
 
 router.get('/get_alumni', isAlumni, usersController.getAlumni);
 
