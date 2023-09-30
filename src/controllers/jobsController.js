@@ -77,9 +77,11 @@ exports.addJobPost = async (req, res, next) => {
 			Job_Skills,
 			Job_Requirements,
 			Job_Time,
-			notification,
 		} = req.body;
-		notification === undefined ? true : notification;
+		let { notification } = req.body;
+		if (notification === undefined) {
+			notification = true;
+		}
 		const required = {
 			Job_Title,
 			Description,
