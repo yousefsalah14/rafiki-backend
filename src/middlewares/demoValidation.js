@@ -29,13 +29,14 @@ const validateDemoCode = async (req, res, next) => {
 			const ipAddresses = demoCodeIpAddresses.get(code);
 			if (ipAddresses.has(!ip)) {
 				ipAddresses.add(ip);
+				demoCode.numUses += 1;
+				await demoCode.save();
 			}
 		} else {
 			demoCodeIpAddresses.set(code, new Set([ip]));
+			demoCode.numUses += 1;
+			await demoCode.save();
 		}
-		demoCode.numUses += 1;
-		demoCode.isUsed = true;
-		await demoCode.save();
 		req.demoCode = demoCode;
 		next();
 	} catch (err) {
