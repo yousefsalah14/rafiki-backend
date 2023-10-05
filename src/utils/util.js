@@ -9,13 +9,27 @@ const Job_Post = require('../models/Job_Post');
 const Job_Category = require('../models/Job_Category');
 const Job_Skills = require('../models/Job_Skills');
 const Job_Application = require('../models/Job_Application');
+const DemoCode = require('../models/DemoCode');
 const sequelize = require('../config/db_config');
-
 const ALUMNI_ROLE_ID = 1;
 const ADMIN_ROLE_ID = 2;
 const STUDENT_ROLE_ID = 3;
 const HR_ROLE_ID = 4;
 const PROFESSOR_ROLE_ID = 5;
+
+const { rateLimit } = require('express-rate-limit');
+// Rate limiting
+function createLimiter(window, max) {
+	const limiter = rateLimit({
+		windowMs: window, // in milliseconds
+		max: max,
+		standardHeaders: 'draft-7',
+		message: 'Too many requests, please try again later.',
+		legacyHeaders: true,
+		validate: { trustProxy: false },
+	});
+	return limiter;
+}
 
 const syncTables = async (FORCE = false) => {
 	await Role.sync({ force: FORCE });
@@ -29,6 +43,7 @@ const syncTables = async (FORCE = false) => {
 	await Job_Post.sync({ force: FORCE });
 	await Job_Skills.sync({ force: FORCE });
 	await Job_Application.sync({ force: FORCE });
+	await DemoCode.sync({ force: FORCE });
 };
 
 async function clearTables() {
@@ -46,6 +61,7 @@ async function clearTables() {
 		await sequelize.models.Experience.destroy({ truncate: true });
 		await sequelize.models.Skills.destroy({ truncate: true });
 		await sequelize.models.Users.destroy({ truncate: true });
+		// await sequelize.models.DemoCode.destroy({ truncate: true }); //! Uncomment this line if you want to clear the DemoCode table
 		// Add other tables here if needed
 
 		// Step 3: Enable foreign key checks
@@ -66,4 +82,5 @@ module.exports = {
 	HR_ROLE_ID,
 	PROFESSOR_ROLE_ID,
 	clearTables,
+	createLimiter,
 };
