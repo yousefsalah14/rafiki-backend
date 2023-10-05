@@ -2,7 +2,7 @@ const user_util = require('../utils/user_util');
 const { ALUMNI_ROLE_ID, STUDENT_ROLE_ID, HR_ROLE_ID, ADMIN_ROLE_ID, PROFESSOR_ROLE_ID } = require('../utils/util');
 const auth_util = require('../utils/auth_util');
 const path = require('path');
-const { sendEmail } = require('../utils/mail_util');
+const { sendEmail } = require('../services/Mail');
 const { FRONTEND_URL } = require('../config/config');
 
 function checkMissingFields(required) {

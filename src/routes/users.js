@@ -2,13 +2,15 @@ const router = require('express').Router();
 const usersController = require('../controllers/usersController');
 const authController = require('../controllers/authController');
 const { isAlumni, isStudent, isHR, isAuthorized, isAlumniOrStudent, isProfessor } = require('../middlewares/Auth');
-
+const { createLimiter } = require('../utils/util');
 //! Deprecated routes - do not use
-router.post('/alumni_signup', usersController.addAlumni); // Use /auth/register instead
-router.post('/student_signup', usersController.addStudent); // Use /auth/register instead
-router.post('/hr_signup', usersController.addHR); // Use /auth/register instead
-router.get('/is_logged_in', isAuthorized, authController.isLoggedIn); // Use /auth/status instead
-router.get('/logout', isAuthorized, authController.logout); // Use /auth/logout instead
+// router.post('/alumni_signup', usersController.addAlumni); //* Use /auth/register instead
+// router.post('/student_signup', usersController.addStudent); //* Use /auth/register instead
+// router.post('/hr_signup', usersController.addHR); //* Use /auth/register instead
+// router.get('/is_logged_in', isAuthorized, authController.isLoggedIn); //* Use /auth/status instead
+// router.get('/logout', isAuthorized, authController.logout); //* Use /auth/logout instead
+// router.post('/reset_password', authController.sendResetPasswordEmail); //* Use /auth/reset_password instead
+// router.post('/reset_password/:token', authController.changePassword); //* Use /auth/reset_password/:token instead
 //! End of deprecated routes
 
 router.get('/get_alumni', isAlumni, usersController.getAlumni);
@@ -45,9 +47,10 @@ router.put('/update_social_urls', isAuthorized, usersController.updateSocialUrls
 router.put('/update_name', isAuthorized, usersController.updateName);
 
 router.put('/update_position', isAuthorized, usersController.updatePosition);
+const genCvLimit = createLimiter(1000 * 60 * 60, 10); // 1 h window, max 10 request
+router.get('/generate_cv', isAuthorized, genCvLimit, usersController.generateCV);
 
-router.get('/generate_cv', isAuthorized, usersController.generateCV);
-
+//! Deprecated route - do not use
 router.get('/fetch_cookie', (req, res, next) => {
 	try {
 		// extract cookie from request
@@ -75,9 +78,5 @@ router.delete('/delete_about', isAuthorized, usersController.deleteAbout);
 router.delete('/delete_phone', isAuthorized, usersController.deletePhone);
 
 router.get('/', isAuthorized, usersController.getFullUser);
-
-router.post('/reset_password', authController.sendResetPasswordEmail);
-
-router.post('/reset_password/:token', authController.changePassword);
 
 module.exports = router;
