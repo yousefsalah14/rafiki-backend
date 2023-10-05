@@ -21,7 +21,7 @@ describe('Demo Validation', () => {
 			const next = sinon.spy();
 			sinon.stub(DemoCode, 'findOne').returns(null);
 			await validateDemoCode(req, res, next);
-			expect(res.status.calledOnceWith(404)).to.be.true;
+			expect(res.status.calledOnceWith(400)).to.be.true;
 			expect(res.send.calledOnceWith({ success: false, message: 'Invalid demo code.' })).to.be.true;
 			expect(next.notCalled).to.be.true;
 			DemoCode.findOne.restore();
