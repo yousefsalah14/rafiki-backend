@@ -11,6 +11,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
+const demoValidation = require('./src/middlewares/demoValidation');
 
 db.authenticate()
 	.then(() => {
@@ -72,7 +73,8 @@ app.use(
 		},
 	})
 );
-
+// Set middleware for proxy
+app.set('trust proxy', true);
 // Set middleware for CORS
 app.use(cors());
 // Set middleware for security
@@ -99,18 +101,21 @@ app.listen(PORT, () => {
 	console.log('\x1b[1m', `Server listening on: http://localhost:${PORT}`);
 });
 
+const authLimiter = util.createLimiter(1000 * 60, 15); //? 1 minute window, max 15 requests
+
 // Routes
 app.get('/', (req, res) => {
 	res.send('Hello World!');
 });
 
+app.use('/api/auth', authLimiter, demoValidation, require('./src/routes/auth'));
+app.use('/api/admin', require('./src/routes/admin'));
 app.use('/api/users', require('./src/routes/users'));
 app.use('/api/roles', require('./src/routes/roles'));
-app.use('/api/admin', require('./src/routes/admin'));
 app.use('/api/skills', require('./src/routes/skills'));
 app.use('/api/user_skills', require('./src/routes/user_skills'));
 app.use('/api/jobs', require('./src/routes/jobs'));
-app.use('/api/auth', require('./src/routes/auth'));
+app.use('/', require('./src/routes/access-codes'));
 
 // 404 middleware
 app.use((req, res, next) => {
