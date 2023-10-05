@@ -34,7 +34,13 @@
 			],
 			"request": {
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "Admin-Api-Key",
+						"value": "{{admin-api-key}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{baseUrl}}api/admin/clear_tables",
 					"host": [
@@ -49,96 +55,424 @@
 			"response": []
 		},
 		{
-			"name": "Alumni Signup",
+			"name": "Register Alumni",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
+							"",
+							"pm.test(\"Response status code is 201\", function() {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData).to.have.property('success');",
+							"  pm.expect(responseData).to.have.property('message');",
+							"  pm.expect(responseData).to.have.property('user');",
+							"});",
+							"",
+							"",
+							"pm.test(\"User ID is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.user.User_Id).to.be.a('number').and.to.be.at.least(0);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Email is in a valid format\", function () {",
+							"  const responseData = pm.response.json();",
+							"",
+							"  pm.expect(responseData.user.Email).to.match(/^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$/);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Date of Birth is in a valid date format\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.user.Date_Of_Birth).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+							"});",
+							"",
+							"",
+							"",
 							"pm.test(\"Response status code is 201\", function () {",
 							"    pm.response.to.have.status(201);",
 							"});",
 							"",
 							"",
-							"pm.test(\"Response has required fields - success and message\", function () {",
+							"pm.test(\"Validate the success field is true\", function () {",
+							"  const responseData = pm.response.json();",
+							"",
+							"  pm.expect(responseData.success).to.be.true;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Message is a non-empty string\", function () {",
 							"    const responseData = pm.response.json();",
 							"    ",
-							"    pm.expect(responseData).to.be.an('object');",
-							"    pm.expect(responseData.success).to.exist;",
-							"    pm.expect(responseData.message).to.exist;",
+							"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
 							"});",
-							"",
-							"",
-							"pm.test(\"The success field is a boolean\", function () {",
-							"  const responseData = pm.response.json();",
-							"  ",
-							"  pm.expect(responseData.success).to.be.a('boolean');",
-							"});",
-							"",
-							"",
-							"pm.test(\"The message field should be a string\", function () {",
-							"  const responseData = pm.response.json();",
-							"  ",
-							"  pm.expect(responseData).to.be.an('object');",
-							"  pm.expect(responseData.message).to.be.a('string');",
-							"});"
+							""
 						],
 						"type": "text/javascript"
 					}
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "demo-code",
+						"value": "demo2023",
+						"type": "text"
+					}
+				],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "UserName",
-							"value": "Mazin",
-							"type": "text"
-						},
-						{
-							"key": "Password",
-							"value": "Mazin123##",
-							"type": "text"
-						},
-						{
-							"key": "Email",
-							"value": "mazinislam431@gmail.com",
-							"type": "text"
-						},
-						{
-							"key": "National_Id",
-							"value": "1234567891234567",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\r\n  \"UserName\": \"Mazin\",\r\n  \"Password\": \"Mazin123##\",\r\n  \"Email\": \"mazinislam431@gmail.com\",\r\n  \"Role_Id\": 1,\r\n  \"Date_Of_Birth\": \"1990-01-01\",\r\n  \"FirstName\": \"John\",\r\n  \"LastName\": \"Doe\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}api/users/alumni_signup",
+					"raw": "{{baseUrl}}api/auth/register",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
-						"alumni_signup"
-					],
-					"query": [
-						{
-							"key": "limit",
-							"value": "5",
-							"disabled": true
-						},
-						{
-							"key": "user",
-							"value": "dskfjksd",
-							"disabled": true
-						}
+						"auth",
+						"register"
 					]
-				}
+				},
+				"description": "- Alumni : 1\n    \n- Student: 3\n    \n- HR: 4"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Register Alumni",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"UserName\": \"johndoe\",\r\n  \"Password\": \"password123\",\r\n  \"Email\": \"johndoe@example.com\",\r\n  \"Role_Id\": 1,\r\n  \"National_Id\": \"1234567890\",\r\n  \"Academic_Id\": \"123456\",\r\n  \"Date_Of_Birth\": \"1990-01-01\",\r\n  \"FirstName\": \"John\",\r\n  \"LastName\": \"Doe\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}api/auth/register",
+							"host": [
+								"{{baseUrl}}api"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\r\n    \"success\": true,\r\n    \"message\": \"User created successfully.\",\r\n    \"user\": {\r\n        \"User_Id\": 1,\r\n        \"UserName\": \"johndoe\",\r\n        \"Email\": \"johndoe@example.com\",\r\n        \"Role_Id\": 1,\r\n        \"Date_Of_Birth\": \"1990-01-01\",\r\n        \"FirstName\": \"John\",\r\n        \"LastName\": \"Doe\",\r\n        \"updatedAt\": \"2023-09-30T11:17:37.586Z\",\r\n        \"createdAt\": \"2023-09-30T11:17:37.586Z\"\r\n    }\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Register Student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 201\", function() {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData).to.have.property('success');",
+							"  pm.expect(responseData).to.have.property('message');",
+							"  pm.expect(responseData).to.have.property('user');",
+							"});",
+							"",
+							"",
+							"pm.test(\"User ID is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.user.User_Id).to.be.a('number').and.to.be.at.least(0);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Email is in a valid format\", function () {",
+							"  const responseData = pm.response.json();",
+							"",
+							"  pm.expect(responseData.user.Email).to.match(/^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$/);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Date of Birth is in a valid date format\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.user.Date_Of_Birth).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+							"});",
+							"",
+							"",
+							"",
+							"pm.test(\"Response status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate the success field is true\", function () {",
+							"  const responseData = pm.response.json();",
+							"",
+							"  pm.expect(responseData.success).to.be.true;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Message is a non-empty string\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"UserName\": \"Student\",\r\n  \"Password\": \"Student123##\",\r\n  \"Email\": \"studentislam431@gmail.com\",\r\n  \"Role_Id\": 3,\r\n  \"Date_Of_Birth\": \"1990-01-01\",\r\n  \"FirstName\": \"John\",\r\n  \"LastName\": \"Doe\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/auth/register",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				},
+				"description": "- Alumni : 1\n    \n- Student: 3\n    \n- HR: 4"
+			},
+			"response": [
+				{
+					"name": "Register Alumni",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"UserName\": \"johndoe\",\r\n  \"Password\": \"password123\",\r\n  \"Email\": \"johndoe@example.com\",\r\n  \"Role_Id\": 1,\r\n  \"National_Id\": \"1234567890\",\r\n  \"Academic_Id\": \"123456\",\r\n  \"Date_Of_Birth\": \"1990-01-01\",\r\n  \"FirstName\": \"John\",\r\n  \"LastName\": \"Doe\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}api/auth/register",
+							"host": [
+								"{{baseUrl}}api"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\r\n    \"success\": true,\r\n    \"message\": \"User created successfully.\",\r\n    \"user\": {\r\n        \"User_Id\": 1,\r\n        \"UserName\": \"johndoe\",\r\n        \"Email\": \"johndoe@example.com\",\r\n        \"Role_Id\": 1,\r\n        \"Date_Of_Birth\": \"1990-01-01\",\r\n        \"FirstName\": \"John\",\r\n        \"LastName\": \"Doe\",\r\n        \"updatedAt\": \"2023-09-30T11:17:37.586Z\",\r\n        \"createdAt\": \"2023-09-30T11:17:37.586Z\"\r\n    }\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Register HR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 201\", function() {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData).to.have.property('success');",
+							"  pm.expect(responseData).to.have.property('message');",
+							"  pm.expect(responseData).to.have.property('user');",
+							"});",
+							"",
+							"",
+							"pm.test(\"User ID is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.user.User_Id).to.be.a('number').and.to.be.at.least(0);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Email is in a valid format\", function () {",
+							"  const responseData = pm.response.json();",
+							"",
+							"  pm.expect(responseData.user.Email).to.match(/^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$/);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Date of Birth is in a valid date format\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.user.Date_Of_Birth).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+							"});",
+							"",
+							"",
+							"",
+							"pm.test(\"Response status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate the success field is true\", function () {",
+							"  const responseData = pm.response.json();",
+							"",
+							"  pm.expect(responseData.success).to.be.true;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Message is a non-empty string\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"UserName\": \"hrr\",\r\n  \"Password\": \"hr123##\",\r\n  \"Email\": \"hr@hr.com\",\r\n  \"Role_Id\": 4,\r\n  \"Date_Of_Birth\": \"1990-01-01\",\r\n  \"FirstName\": \"hrr\",\r\n  \"LastName\": \"hrr\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/auth/register",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				},
+				"description": "- Alumni : 1\n    \n- Student: 3\n    \n- HR: 4"
+			},
+			"response": [
+				{
+					"name": "Register Alumni",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"UserName\": \"johndoe\",\r\n  \"Password\": \"password123\",\r\n  \"Email\": \"johndoe@example.com\",\r\n  \"Role_Id\": 1,\r\n  \"National_Id\": \"1234567890\",\r\n  \"Academic_Id\": \"123456\",\r\n  \"Date_Of_Birth\": \"1990-01-01\",\r\n  \"FirstName\": \"John\",\r\n  \"LastName\": \"Doe\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}api/auth/register",
+							"host": [
+								"{{baseUrl}}api"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\r\n    \"success\": true,\r\n    \"message\": \"User created successfully.\",\r\n    \"user\": {\r\n        \"User_Id\": 1,\r\n        \"UserName\": \"johndoe\",\r\n        \"Email\": \"johndoe@example.com\",\r\n        \"Role_Id\": 1,\r\n        \"Date_Of_Birth\": \"1990-01-01\",\r\n        \"FirstName\": \"John\",\r\n        \"LastName\": \"Doe\",\r\n        \"updatedAt\": \"2023-09-30T11:17:37.586Z\",\r\n        \"createdAt\": \"2023-09-30T11:17:37.586Z\"\r\n    }\r\n}"
+				}
+			]
 		},
 		{
 			"name": "Alumni Login",
@@ -190,12 +524,12 @@
 					]
 				},
 				"url": {
-					"raw": "{{baseUrl}}api/users/login",
+					"raw": "{{baseUrl}}api/auth/login",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"login"
 					],
 					"query": [
@@ -571,111 +905,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}api/users/is_logged_in",
+					"raw": "{{baseUrl}}api/auth/status",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
-						"is_logged_in"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Student Signup",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Response status code is 201\", function () {",
-							"  pm.response.to.have.status(201);",
-							"});",
-							"",
-							"",
-							"pm.test(\"Response body has the required fields - success and message\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData).to.be.an('object');",
-							"    pm.expect(responseData.success).to.exist;",
-							"    pm.expect(responseData.message).to.exist;",
-							"});",
-							"",
-							"",
-							"pm.test(\"The success field is a boolean value\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData).to.be.an('object');",
-							"    pm.expect(responseData.success).to.be.a('boolean');",
-							"});",
-							"",
-							"",
-							"pm.test(\"Message field should be a non-empty string\", function () {",
-							"  const responseData = pm.response.json();",
-							"  ",
-							"  pm.expect(responseData).to.be.an('object');",
-							"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
-							"});",
-							"",
-							"",
-							"pm.test(\"Response time is less than 500ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(500);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "UserName",
-							"value": "Student",
-							"type": "text"
-						},
-						{
-							"key": "Password",
-							"value": "Student123##",
-							"type": "text"
-						},
-						{
-							"key": "Email",
-							"value": "student@student.com",
-							"type": "text"
-						},
-						{
-							"key": "National_Id",
-							"value": "11111111111111",
-							"type": "text"
-						},
-						{
-							"key": "Academic_Id",
-							"value": "20210000",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{baseUrl}}api/users/student_signup",
-					"host": [
-						"{{baseUrl}}api"
-					],
-					"path": [
-						"users",
-						"student_signup"
-					],
-					"query": [
-						{
-							"key": "limit",
-							"value": "5",
-							"disabled": true
-						}
+						"auth",
+						"status"
 					]
 				}
 			},
@@ -727,12 +963,12 @@
 					]
 				},
 				"url": {
-					"raw": "{{baseUrl}}api/users/login",
+					"raw": "{{baseUrl}}api/auth/login",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"login"
 					],
 					"query": [
@@ -859,7 +1095,7 @@
 					"urlencoded": [
 						{
 							"key": "Skill_Name",
-							"value": "Web developmenttt",
+							"value": "Front-End",
 							"type": "text"
 						}
 					]
@@ -1059,86 +1295,6 @@
 			"response": []
 		},
 		{
-			"name": "Generate cv",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Response status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"",
-							"pm.test(\"Success field is present in the response\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData.success).to.exist;",
-							"});",
-							"",
-							"",
-							"pm.test(\"The success field has a boolean value\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData).to.be.an('object');",
-							"    pm.expect(responseData.success).to.equal(true)",
-							"});",
-							"",
-							"pm.test(\"Response has a valid cvUrl field\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData).to.be.an('object');",
-							"    pm.expect(responseData.cvUrl).to.exist.and.to.be.a('string');",
-							"});",
-							"",
-							"pm.test(\"cvUrl is a non-empty string\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData.cvUrl).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
-							"});",
-							"",
-							"",
-							"pm.test(\"cvUrl is a valid URL format\", function () {",
-							"  const responseData = pm.response.json();",
-							"  ",
-							"  pm.expect(responseData.cvUrl).to.match(/^https?:\\/\\/[^\\s/$.?#].[^\\s]*$/);",
-							"});",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": []
-				},
-				"url": {
-					"raw": "{{baseUrl}}api/users/generate_cv?Job_Title=Full Stack Developer",
-					"host": [
-						"{{baseUrl}}api"
-					],
-					"path": [
-						"users",
-						"generate_cv"
-					],
-					"query": [
-						{
-							"key": "Job_Title",
-							"value": "Full Stack Developer"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Student Logout",
 			"event": [
 				{
@@ -1169,106 +1325,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}api/users/logout",
+					"raw": "{{baseUrl}}api/auth/logout",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"logout"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "HR Signup",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Response status code is 201\", function () {",
-							"  pm.expect(pm.response.code).to.equal(201);",
-							"});",
-							"",
-							"",
-							"pm.test(\"Response has required fields - success and message\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData).to.be.an('object');",
-							"    pm.expect(responseData.success).to.exist.and.to.be.a('boolean');",
-							"    pm.expect(responseData.message).to.exist.and.to.be.a('string');",
-							"});",
-							"",
-							"",
-							"pm.test(\"Check if success is a boolean value\", function () {",
-							"    const responseData = pm.response.json();",
-							"",
-							"    pm.expect(responseData.success).to.be.a('boolean');",
-							"});",
-							"",
-							"",
-							"pm.test(\"The message is a non-empty string\", function () {",
-							"  const responseData = pm.response.json();",
-							"",
-							"  pm.expect(responseData).to.be.an('object');",
-							"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
-							"});",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "UserName",
-							"value": "hrr",
-							"type": "text"
-						},
-						{
-							"key": "Password",
-							"value": "hr123##",
-							"type": "text"
-						},
-						{
-							"key": "Email",
-							"value": "hr@hr.com",
-							"type": "text"
-						},
-						{
-							"key": "FirstName",
-							"value": "hr",
-							"type": "text"
-						},
-						{
-							"key": "LastName",
-							"value": "hr",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{baseUrl}}api/users/hr_signup",
-					"host": [
-						"{{baseUrl}}api"
-					],
-					"path": [
-						"users",
-						"hr_signup"
-					],
-					"query": [
-						{
-							"key": "limit",
-							"value": "5",
-							"disabled": true
-						}
 					]
 				}
 			},
@@ -1320,12 +1383,12 @@
 					]
 				},
 				"url": {
-					"raw": "{{baseUrl}}api/users/login",
+					"raw": "{{baseUrl}}api/auth/login",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"login"
 					],
 					"query": [
@@ -1588,7 +1651,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Job_Title\": \"Full Stack Developer\",\r\n    \"Description\": \"We are looking for a Full Stack Developer to join our team!\",\r\n    \"Company_Name\": \"Acme Inc.\",\r\n    \"Company_Logo\": \"https://example.com/logo.png\",\r\n    \"Company_Size\": \"100-500 employees\",\r\n    \"Contact_Info\": \"John Doe\",\r\n    \"Company_Email\": \"jobs@acme.com\",\r\n    \"External_Link\": \"https://acme.com/careers\",\r\n    \"Location\": \"New York, NY\",\r\n    \"Application_Deadline\": \"2022-12-31\",\r\n    \"Job_Category_Id\": 1,\r\n    \"Salary\": 5000,\r\n    \"Publisher_Id\": 1,\r\n    \"isInternship\": false,\r\n    \"Duration\": null,\r\n    \"Job_Type\": \"onsite\", // 'remote', 'onsite', 'hybrid'\r\n    \"Education_Level\": \"graduate\", // 'undergraduate', 'graduate', 'both'\r\n    \"Job_Skills\": [1],\r\n    \"Job_Requirements\": \"test\",\r\n    \"Job_Time\": \"Full-time\"\r\n}",
+					"raw": "{\r\n    \"Job_Title\": \"Full Stack Developer\",\r\n    \"Description\": \"We are looking for a Full Stack Developer to join our team!\",\r\n    \"Company_Name\": \"Acme Inc.\",\r\n    \"Company_Logo\": \"https://example.com/logo.png\",\r\n    \"Company_Size\": \"100-500 employees\",\r\n    \"Contact_Info\": \"John Doe\",\r\n    \"Company_Email\": \"jobs@acme.com\",\r\n    \"External_Link\": \"https://acme.com/careers\",\r\n    \"Location\": \"New York, NY\",\r\n    \"Application_Deadline\": \"2023-12-31\",\r\n    \"Job_Category_Id\": 1,\r\n    \"Salary\": 5000,\r\n    \"Publisher_Id\": 1,\r\n    \"isInternship\": false,\r\n    \"Duration\": null,\r\n    \"Job_Type\": \"onsite\", // 'remote', 'onsite', 'hybrid'\r\n    \"Education_Level\": \"graduate\", // 'undergraduate', 'graduate', 'both'\r\n    \"Job_Skills\": [1],\r\n    \"Job_Requirements\": \"test\",\r\n    \"Job_Time\": \"Full-time\",\r\n    \"notification\":false\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1801,12 +1864,12 @@
 					]
 				},
 				"url": {
-					"raw": "{{baseUrl}}api/users/login",
+					"raw": "{{baseUrl}}api/auth/login",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"login"
 					],
 					"query": [
@@ -2059,12 +2122,12 @@
 					]
 				},
 				"url": {
-					"raw": "{{baseUrl}}api/users/login",
+					"raw": "{{baseUrl}}api/auth/login",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"login"
 					],
 					"query": [
@@ -2340,12 +2403,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}api/users/logout",
+					"raw": "{{baseUrl}}api/auth/logout",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"logout"
 					]
 				}
@@ -2398,12 +2461,12 @@
 					]
 				},
 				"url": {
-					"raw": "{{baseUrl}}api/users/login",
+					"raw": "{{baseUrl}}api/auth/login",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"login"
 					],
 					"query": [
@@ -2462,7 +2525,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"pictureUrl\" : \"https://res.cloudinary.com/do6oz83pz/image/upload/v1693593841/images/zkyqlwcsv3axmojbtjua.jpg\"\r\n}",
+					"raw": "{\r\n    \"pictureUrl\" : \"https://res.cloudinary.com/do6oz83pz/image/upload/v1696427720/images/357750713_6222313764534213_4994894433967516616_n_hp84md.jpg\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -2874,20 +2937,20 @@
 					"mode": "urlencoded",
 					"urlencoded": [
 						{
-							"key": "Country",
-							"value": "Egypt",
+							"key": "Job_Title",
+							"value": "Full Stack Developer",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{baseUrl}}api/users/update_country",
+					"raw": "{{baseUrl}}api/users/update_position",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
 						"users",
-						"update_country"
+						"update_position"
 					]
 				}
 			},
@@ -2951,12 +3014,12 @@
 						},
 						{
 							"key": "LinkedIn_URL",
-							"value": "dhjfsdjkhg",
+							"value": "https://github.com/N1ghtHunter",
 							"type": "text"
 						},
 						{
 							"key": "GitHub_URL",
-							"value": "Test",
+							"value": "https://www.linkedin.com/in/mazin-islam-88658b22b/",
 							"type": "text"
 						}
 					]
@@ -2969,6 +3032,86 @@
 					"path": [
 						"users",
 						"update_social_urls"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate cv",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Success field is present in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.success).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"The success field has a boolean value\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.success).to.equal(true)",
+							"});",
+							"",
+							"pm.test(\"Response has a valid cvUrl field\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.cvUrl).to.exist.and.to.be.a('string');",
+							"});",
+							"",
+							"pm.test(\"cvUrl is a non-empty string\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.cvUrl).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"cvUrl is a valid URL format\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.cvUrl).to.match(/^https?:\\/\\/[^\\s/$.?#].[^\\s]*$/);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{baseUrl}}api/users/generate_cv?Job_Title=Full Stack Developer",
+					"host": [
+						"{{baseUrl}}api"
+					],
+					"path": [
+						"users",
+						"generate_cv"
+					],
+					"query": [
+						{
+							"key": "Job_Title",
+							"value": "Full Stack Developer"
+						}
 					]
 				}
 			},
@@ -3481,7 +3624,8 @@
 							"  const responseData = pm.response.json();",
 							"  ",
 							"  pm.expect(responseData.message).to.be.a('string');",
-							"});"
+							"});",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -3489,7 +3633,13 @@
 			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Demo-Code",
+						"value": "demo2023",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "urlencoded",
 					"urlencoded": [
@@ -3501,12 +3651,12 @@
 					]
 				},
 				"url": {
-					"raw": "{{baseUrl}}api/users/reset_password",
+					"raw": "{{baseUrl}}api/auth/reset_password",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"reset_password"
 					]
 				}
@@ -3572,14 +3722,14 @@
 					]
 				},
 				"url": {
-					"raw": "{{baseUrl}}api/users/reset_password/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyX0lkIjoxLCJFbWFpbCI6Im1hemluaXNsYW00MzFAZ21haWwuY29tIiwiaWF0IjoxNjkyNzMwNzI1LCJleHAiOjE2OTI3MzQzMjV9.z-VtaDUG__-Cuf5KUTfABpQ1Qp_IzeFVeQdqhihbln4",
+					"raw": "{{baseUrl}}api/auth/reset_password/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyX0lkIjoxLCJFbWFpbCI6Im1hemluaXNsYW00MzFAZ21haWwuY29tIiwiaWF0IjoxNjkzNTczMjg5LCJleHAiOjE2OTM1NzY4ODl9.7a8eptpqaWzFsQpthlSzl2rUI-bvbtjGfEc8iwiFFak",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"reset_password",
-						"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyX0lkIjoxLCJFbWFpbCI6Im1hemluaXNsYW00MzFAZ21haWwuY29tIiwiaWF0IjoxNjkyNzMwNzI1LCJleHAiOjE2OTI3MzQzMjV9.z-VtaDUG__-Cuf5KUTfABpQ1Qp_IzeFVeQdqhihbln4"
+						"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyX0lkIjoxLCJFbWFpbCI6Im1hemluaXNsYW00MzFAZ21haWwuY29tIiwiaWF0IjoxNjkzNTczMjg5LCJleHAiOjE2OTM1NzY4ODl9.7a8eptpqaWzFsQpthlSzl2rUI-bvbtjGfEc8iwiFFak"
 					]
 				}
 			},
@@ -3632,12 +3782,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}api/users/logout",
+					"raw": "{{baseUrl}}api/auth/logout",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"logout"
 					]
 				}
@@ -3696,7 +3846,13 @@
 					]
 				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Admin-Api-Key",
+						"value": "{{admin-api-key}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "urlencoded",
 					"urlencoded": [
@@ -3781,12 +3937,12 @@
 					]
 				},
 				"url": {
-					"raw": "{{baseUrl}}api/users/login",
+					"raw": "{{baseUrl}}api/auth/login",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"login"
 					],
 					"query": [
@@ -3795,6 +3951,417 @@
 							"value": "5",
 							"disabled": true
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Demo Code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('success');",
+							"    pm.expect(responseData).to.have.property('demoCode');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Success is a boolean value\", function () {",
+							"  const responseData = pm.response.json();",
+							"",
+							"  pm.expect(responseData.success).to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Verify that demoCode is an object\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.demoCode).to.be.an('object');",
+							"    pm.environment.set(\"demoCodeId\", responseData.demoCode.id);",
+							"    pm.environment.set(\"demoCode\", responseData.demoCode.code);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Admin-Api-Key",
+						"value": "{{admin-api-key}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "code",
+							"value": "demo202333",
+							"type": "text"
+						},
+						{
+							"key": "expiresAt",
+							"value": "2023-10-30 14:00:00",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}access-codes/",
+					"host": [
+						"{{baseUrl}}access-codes"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Demo Code by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate the 'success' field is present and its value is true\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.success).to.exist.and.to.be.true;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate the 'demoCode' object is present in the response\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.demoCode).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate the id field in the demoCode object is a non-zero integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.demoCode).to.exist.and.to.be.an('object');",
+							"    pm.expect(responseData.demoCode.id).to.exist.and.to.be.a('number');",
+							"    pm.expect(responseData.demoCode.id).to.be.above(0);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate code field in demoCode object is a non-empty string\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.demoCode).to.exist.and.to.be.an('object');",
+							"    pm.expect(responseData.demoCode.code).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Admin-Api-Key",
+						"value": "{{admin-api-key}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{baseUrl}}access-codes/{{demoCodeId}}",
+					"host": [
+						"{{baseUrl}}access-codes"
+					],
+					"path": [
+						"{{demoCodeId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Demo Codes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate the 'success' field in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.success).to.exist.and.to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Verify that the 'demoCodes' array is present in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.demoCodes).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate id is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.demoCodes).to.be.an('array');",
+							"    ",
+							"    responseData.demoCodes.forEach(function (demoCode) {",
+							"        pm.expect(demoCode.id).to.be.a('number');",
+							"        pm.expect(demoCode.id).to.be.at.least(0);",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"Verify numUses is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData.demoCodes).to.be.an('array');",
+							"    responseData.demoCodes.forEach(function (demoCode) {",
+							"        pm.expect(demoCode.numUses).to.be.a('number');",
+							"        pm.expect(demoCode.numUses).to.be.at.least(0, \"numUses should be a non-negative integer\");",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Admin-Api-Key",
+						"value": "{{admin-api-key}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{baseUrl}}access-codes/",
+					"host": [
+						"{{baseUrl}}access-codes"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Access code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Admin-Api-Key",
+						"value": "{{admin-api-key}}",
+						"type": "text"
+					},
+					{
+						"key": "Demo-Code",
+						"value": "{{demoCode}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{baseUrl}}access-codes/verify",
+					"host": [
+						"{{baseUrl}}access-codes"
+					],
+					"path": [
+						"verify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Demo Codes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Verify the 'success' field is present and has a value of true\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.success).to.exist.and.to.be.true;",
+							"});",
+							"",
+							"",
+							"pm.test(\"The 'id' field in the demoCode object is a non-zero integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.demoCode).to.be.an('object');",
+							"    pm.expect(responseData.demoCode.id).to.be.a('number').and.to.not.equal(0);",
+							"});",
+							"",
+							"",
+							"pm.test(\"The 'code' field in the demoCode object is a non-empty string\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.demoCode).to.exist;",
+							"    pm.expect(responseData.demoCode.code).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Admin-Api-Key",
+						"value": "{{admin-api-key}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"valid\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}access-codes/{{demoCodeId}}",
+					"host": [
+						"{{baseUrl}}access-codes"
+					],
+					"path": [
+						"{{demoCodeId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Demo Code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate the 'success' field in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.success).to.exist.and.to.be.a('boolean');",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Admin-Api-Key",
+						"value": "{{admin-api-key}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"valid\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}access-codes/{{demoCodeId}}",
+					"host": [
+						"{{baseUrl}}access-codes"
+					],
+					"path": [
+						"{{demoCodeId}}"
 					]
 				}
 			},
@@ -3811,11 +4378,6 @@
 						{
 							"key": "Skill_Name",
 							"value": "Web Developmentt",
-							"type": "text"
-						},
-						{
-							"key": "Skill_Description",
-							"value": "A Web Developer is a professional who is responsible for the design and construction of websites. They ensure that sites meet user expectations by ensuring they look good, run smoothly and offer easy access points with no loading issues between pages or error messages.",
 							"type": "text"
 						}
 					]
@@ -3956,7 +4518,13 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Admin-Api-Key",
+						"value": "{{admin-api-key}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "urlencoded",
 					"urlencoded": [
@@ -4089,7 +4657,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Alumni logged in successfully\", function () {\r",
+							"pm.test(\"Professor logged in successfully\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData.sessionId).to.not.equal(undefined)\r",
 							"    pm.expect(jsonData.success).to.equal(true)\r",
@@ -4120,12 +4688,12 @@
 					]
 				},
 				"url": {
-					"raw": "{{baseUrl}}api/users/login",
+					"raw": "{{baseUrl}}api/auth/login",
 					"host": [
 						"{{baseUrl}}api"
 					],
 					"path": [
-						"users",
+						"auth",
 						"login"
 					],
 					"query": [
@@ -4227,7 +4795,13 @@
 			],
 			"request": {
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "Admin-Api-Key",
+						"value": "{{admin-api-key}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{baseUrl}}api/admin/clear_tables",
 					"host": [
@@ -4258,7 +4832,10 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					""
+					"pm.request.headers.add({",
+					"  key: \"Demo-Code\",",
+					"  value: \"demo2023\"",
+					"});"
 				]
 			}
 		},
@@ -4286,6 +4863,14 @@
 			"key": "public",
 			"value": "http://localhost:3008/",
 			"type": "string"
+		},
+		{
+			"key": "demoCodeId",
+			"value": ""
+		},
+		{
+			"key": "demoCode",
+			"value": ""
 		}
 	]
 }
