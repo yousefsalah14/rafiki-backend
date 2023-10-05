@@ -13,7 +13,7 @@ const getIPv4Address = (ip) => {
 
 const validateDemoCode = async (req, res, next) => {
 	try {
-		let code = req.headers['demo-code'];
+		const code = req.headers['demo-code'];
 		const ip = getIPv4Address(req.headers['x-forwarded-for'] || req.ip || null);
 		if (!code) {
 			return res.status(400).send({ success: false, message: 'Missing demo code.' });
