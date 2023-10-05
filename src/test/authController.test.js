@@ -3,7 +3,7 @@ const sinon = require('sinon');
 const authController = require('../controllers/authController');
 const user_util = require('../utils/user_util');
 const auth_util = require('../utils/auth_util');
-const mail_util = require('../utils/mail_util');
+const mail_util = require('../services/Mail');
 
 describe('Auth Controller', () => {
 	describe('register', () => {

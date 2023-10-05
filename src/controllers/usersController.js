@@ -1,6 +1,6 @@
 const user_util = require('../utils/user_util');
 const { CLOUDINARY_API_SECRET } = require('../config/config');
-const cvGenerator = require('../utils/CV');
+const cvGenerator = require('../services/CV');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 cloudinary.config({
@@ -429,8 +429,7 @@ exports.generateCV = async (req, res, next) => {
 				fs.unlinkSync(cv);
 			})
 			.catch((err) => {
-				console.log(err);
-				throw new Error(err);
+				next(err);
 			});
 	} catch (err) {
 		next(err);

@@ -56,8 +56,11 @@ module.exports = async function generateCV(user = {}) {
 					});
 			});
 		});
-		// check if the image was downloaded successfully
-		if (!fs.existsSync(path.join(__dirname, `../../public/static/${name}.jpg`))) {
+		// check if the image was downloaded successfully and the size is greater than 0
+		if (
+			!fs.existsSync(path.join(__dirname, `../../public/static/${name}.jpg`)) ||
+			fs.statSync(path.join(__dirname, `../../public/static/${name}.jpg`)).size === 0
+		) {
 			throw new Error('Error downloading profile picture');
 		}
 		const doc = new PDFDocument({
@@ -175,6 +178,9 @@ module.exports = async function generateCV(user = {}) {
 
 		return path.join(__dirname, `../../public/static/${name}-CV.pdf`);
 	} catch (error) {
+		// DELETE THE USER'S PROFILE PICTURE AND PDF IF AN ERROR OCCURS
+		fs.unlinkSync(path.join(__dirname, `../../public/static/${name}.jpg`));
+		fs.unlinkSync(path.join(__dirname, `../../public/static/${name}-CV.pdf`));
 		throw new Error(error);
 	}
 };
