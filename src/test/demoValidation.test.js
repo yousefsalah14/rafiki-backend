@@ -43,11 +43,10 @@ describe('Demo Validation', () => {
 			const req = { headers: { 'demo-code': 'valid-code' } };
 			const res = {};
 			const next = sinon.spy();
-			const demoCode = { numUses: 0, isUsed: false, save: sinon.spy() };
+			const demoCode = { numUses: 0, valid: true, save: sinon.spy() };
 			sinon.stub(DemoCode, 'findOne').returns(demoCode);
 			await validateDemoCode(req, res, next);
 			expect(demoCode.numUses).to.equal(1);
-			expect(demoCode.isUsed).to.be.true;
 			expect(demoCode.save.calledOnce).to.be.true;
 			expect(req.demoCode).to.equal(demoCode);
 			expect(next.calledOnce).to.be.true;
