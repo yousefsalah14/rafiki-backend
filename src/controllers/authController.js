@@ -138,19 +138,7 @@ exports.sendResetPasswordEmail = async (req, res, next) => {
 		const url = `${FRONTEND_URL + 'resetPass/createNewPassword/'}${token}`;
 		console.log(url);
 		const reset_password_email = require('../mail_templates/reset_password.js')(url);
-		const attachments = [
-			{
-				filename: 'vector.jpg',
-				path: path.join(__dirname, '..', '..', 'public', 'static', 'vector.jpg'),
-				cid: 'vector',
-			},
-			// {
-			// 	filename: 'logo.png',
-			// 	path: path.join(__dirname, '..', '..', 'public', 'static', 'logo.png'),
-			// 	cid: 'logo',
-			// },
-		];
-		await sendEmail(email, 'Reset Password', '', reset_password_email, attachments);
+		await sendEmail(email, 'Reset Password', '', reset_password_email);
 	} catch (error) {
 		console.log(error);
 		next(error);

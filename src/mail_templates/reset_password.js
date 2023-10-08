@@ -36,23 +36,23 @@ const HTML_TEMPLATE = (text) => {
                     <td align="center" valign="top" style="padding: 20px;">
                         <div
                             style="max-width: 600px; background-color: #ffffff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); margin: 0 auto;">
-                            <div style="text-align: center; padding: 40px 0; height: 15%; color: #525252;">
+                            <div style="text-align: center; height: 15%; color: #525252;">
                                 <h1>Oops!</h1>
                             </div>
                             <img
-								src="cid:logo"
+								src="https://res.cloudinary.com/do6oz83pz/image/upload/v1696544986/logo-picdark-shfaf_ivba0j.png"
 								alt="Logo"
-								width="100px"
+								width="70px"
 							/>
                             <table class="content-cell" width="100%">
                                 <tr>
                                     <td style="padding: 0;">
                                         <p style="color: #8a8a8a;">It looks like you forgot your password. You can reset it
                                             using the button below.</p>
-                                        <img src="cid:vector" alt="Vector" width="100px" height="100px">
+                                        <img src="https://res.cloudinary.com/do6oz83pz/image/upload/v1696598973/Frame_44150_p3apme.png" alt="Vector" width="150px">
                                         <a style="display:block; width: fit-content; margin: 10px auto; padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px;"
                                             href="${text}">Reset password</a>
-                                        <p style="color: #a6a8b0;">If you didn't request a password reset, you can safely
+                                        <p style="color: #8a8a8a;">If you didn't request a password reset, you can safely
                                             ignore this email.</p>
                                     </td>
                                 </tr>

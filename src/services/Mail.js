@@ -18,7 +18,7 @@ const sendMail = (mailDetails) => {
 	});
 };
 
-async function sendEmail(email, subject, text, html, attachments) {
+async function sendEmail(email, subject, text, html, attachments = []) {
 	const options = {
 		from: 'Rafiki Support ams.supp@gmail.com',
 		to: email,
