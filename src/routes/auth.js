@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const authController = require('../controllers/authController');
 const { isAuthorized } = require('../middlewares/Auth');
-
-router.post('/register', authController.register);
+const demoValidation = require('../middlewares/demoValidation');
+router.post('/register', demoValidation, authController.register);
 router.post('/login', authController.login);
-router.get('/status', isAuthorized, authController.isLoggedIn);
-router.get('/logout', isAuthorized, authController.logout);
-router.post('/reset_password', authController.sendResetPasswordEmail);
-router.post('/reset_password/:token', authController.changePassword);
+router.get('/status', demoValidation, isAuthorized, authController.isLoggedIn);
+router.get('/logout', demoValidation, isAuthorized, authController.logout);
+router.post('/reset_password', demoValidation, authController.sendResetPasswordEmail);
+router.post('/reset_password/:token', demoValidation, authController.changePassword);
 module.exports = router;

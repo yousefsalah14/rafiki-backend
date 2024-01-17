@@ -136,7 +136,6 @@ exports.sendResetPasswordEmail = async (req, res, next) => {
 		res.status(200).send({ success: true, message: 'Reset password email will be sent soon.' });
 		const token = await user_util.generateResetPasswordToken(user);
 		const url = `${FRONTEND_URL + 'resetPass/createNewPassword/'}${token}`;
-		console.log(url);
 		const reset_password_email = require('../mail_templates/reset_password.js')(url);
 		await sendEmail(email, 'Reset Password', '', reset_password_email);
 	} catch (error) {
