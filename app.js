@@ -109,12 +109,12 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authLimiter, require('./src/routes/auth'));
-app.use('/api/admin', demoValidation, require('./src/routes/admin'));
-app.use('/api/users', demoValidation, require('./src/routes/users'));
-app.use('/api/roles', demoValidation, require('./src/routes/roles'));
-app.use('/api/skills', demoValidation, require('./src/routes/skills'));
-app.use('/api/user_skills', demoValidation, require('./src/routes/user_skills'));
-app.use('/api/jobs', demoValidation, require('./src/routes/jobs'));
+app.use('/api/admin', require('./src/routes/admin'));
+app.use('/api/users', require('./src/routes/users'));
+app.use('/api/roles', require('./src/routes/roles'));
+app.use('/api/skills', require('./src/routes/skills'));
+app.use('/api/user_skills', require('./src/routes/user_skills'));
+app.use('/api/jobs', require('./src/routes/jobs'));
 app.use('/', require('./src/routes/access-codes'));
 
 // 404 middleware

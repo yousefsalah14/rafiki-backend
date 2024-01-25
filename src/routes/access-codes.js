@@ -11,6 +11,6 @@ router.put('/access-codes/:id', isAdmin, demoCodesController.updateDemoCode);
 router.put('/access-codes/status/:id', isAdmin, demoCodesController.updateDemoCode);
 router.delete('/access-codes/:id', isAdmin, demoCodesController.deleteDemoCode);
 // check if access code is valid
-router.post('/access-codes/verify', demoValidator, demoCodesController.verifyDemoCode);
+router.post('/access-codes/verify', demoCodesController.verifyDemoCode);
 
 module.exports = router;
