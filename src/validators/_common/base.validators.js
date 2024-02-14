@@ -39,3 +39,12 @@ exports.strict = (req, _res, next) => {
    })
    next()
 }
+
+// password 8-55 chars 1 number 1 uppercase 1 lowercase
+exports.password = (field) => {
+   return field
+      .isLength({ min: 8, max: 55 })
+      .withMessage('password must be 8-55 characters')
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+      .withMessage('password must contain at least 1 number, 1 uppercase and 1 lowercase letter')
+}
