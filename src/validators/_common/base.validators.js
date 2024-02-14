@@ -1,20 +1,20 @@
 const { validationResult, matchedData } = require('express-validator')
 
-// const ErrorBuilder = require('../../utils/error.builder')
+const ErrorBuilder = require('../../utils/error.builder')
 
 exports.handleValidationErrors = (req, _res, next) => {
    const errors = validationResult(req)
 
-//    if (!errors.isEmpty()) {
-//       const error = new ErrorBuilder({
-//          message: 'validation failed',
-//          statusCode: 422,
-//          code: 'VALIDATION_FAILED',
-//          data: errors.array(),
-//       })
+   if (!errors.isEmpty()) {
+      const error = new ErrorBuilder({
+         message: 'validation failed',
+         statusCode: 422,
+         code: 'VALIDATION_FAILED',
+         data: errors.array(),
+      })
 
-//       return next(error)
-//    }
+      return next(error)
+   }
 
    next()
 }
