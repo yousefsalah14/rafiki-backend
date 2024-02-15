@@ -30,7 +30,7 @@ describe('Auth Controller', () => {
 				body: {
 					UserName: 'existinguser',
 					Password: 'password',
-					Email: 'existing@user.com',
+					Email: 'a_example12345678@fci.helwan.edu.eg',
 					Role_Id: 1,
 					Academic_Id: '123456789',
 					Date_Of_Birth: '1999-01-01',
@@ -54,7 +54,7 @@ describe('Auth Controller', () => {
 				body: {
 					UserName: 'existinguser',
 					Password: 'password',
-					Email: 'existing@user.com',
+					Email: 'existing@fci.helwan.edu.eg',
 					Role_Id: 2,
 					Date_Of_Birth: '1999-01-01',
 					FirstName: 'test',
@@ -80,7 +80,7 @@ describe('Auth Controller', () => {
 				body: {
 					UserName: 'newuser',
 					Password: 'password',
-					Email: 'existing@user.com',
+					Email: 'existing@fci.helwan.edu.eg',
 					Role_Id: 1,
 					Date_Of_Birth: '1999-01-01',
 					FirstName: 'test',
@@ -105,7 +105,7 @@ describe('Auth Controller', () => {
 				body: {
 					UserName: 'newuser',
 					Password: 'password',
-					Email: 'existing@user.com',
+					Email: 'existing@fci.helwan.edu.eg',
 					Role_Id: 1,
 					Date_Of_Birth: '1999-01-01',
 					FirstName: 'test',
@@ -120,6 +120,30 @@ describe('Auth Controller', () => {
 			await authController.register(req, res, next);
 			expect(next.calledOnce).to.be.true;
 			auth_util.register.restore();
+			user_util.checkEmailExists.restore();
+			user_util.checkUserNameExists.restore();
+		});
+
+		it('should return 422 if email is not valid', async () => {
+			const req = {
+				body: {
+					UserName: 'newuser',
+					Password: 'password',
+					Email: 'invalidemail',
+					Role_Id: 1,
+					Date_Of_Birth: '1999-01-01',
+					FirstName: 'test',
+					LastName: 'test',
+				},
+			};
+			const res = { status: sinon.stub().returnsThis(), json: sinon.stub() };
+			const next = sinon.spy();
+			sinon.stub(user_util, 'checkEmailExists').returns(false);
+			sinon.stub(user_util, 'checkUserNameExists').returns(false);
+			await authController.register(req, res, next);
+			expect(res.status.calledWith(422)).to.be.true;
+			expect(res.json.calledWith({ success: false, message: 'this email doesn’t meet the required format' })).to.be
+				.true;
 			user_util.checkEmailExists.restore();
 			user_util.checkUserNameExists.restore();
 		});
@@ -235,7 +259,7 @@ describe('Auth Controller', () => {
 		});
 
 		it('should return 404 if user is not found', async () => {
-			const req = { body: { email: 'test@test.com' } };
+			const req = { body: { email: 'test@fci.helwan.edu.eg' } };
 			const res = {};
 			const next = sinon.spy();
 			res.status = sinon.stub().returns(res);
