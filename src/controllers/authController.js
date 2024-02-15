@@ -15,6 +15,12 @@ function checkMissingFields(required) {
 	return missing_fields;
 }
 
+function emailValidation (email){
+	let matched = email.match(/^[A-Za-z][a-z]+[_][0-9]{8,9}@fci\.helwan\.edu\.eg$/)
+        if (email == matched) return true;
+	return false	
+}
+
 /**
  *
  * @param {Object} req - The request object.
@@ -38,6 +44,10 @@ exports.register = async (req, res, next) => {
 		const missing_fields = checkMissingFields(required);
 		if (missing_fields.length > 0) {
 			res.status(400).json({ success: false, message: 'Missing credentials.', missing_fields });
+			return;
+		}
+		if( emailValidation(Email) == false){
+			res.status(422).json({success: false, message: 'this email doesn’t meet the required format'})
 			return;
 		}
 		// check if user already exists
