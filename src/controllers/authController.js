@@ -16,7 +16,7 @@ function checkMissingFields(required) {
 }
 
 function emailValidation (email){
-	let matched = email.match(/^[A-Za-z][a-z]+[_][0-9]{8,9}@fci\.helwan\.edu\.eg$/)
+	let matched = email.match(/^[\w]+@fci\.helwan\.edu\.eg$/)
         if (email == matched) return true;
 	return false	
 }
