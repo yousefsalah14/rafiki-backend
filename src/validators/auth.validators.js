@@ -25,3 +25,8 @@ exports.login = [
     strict,
 ]
 
+exports.sendResetPasswordEmail = [
+    body('Email').isEmail(),
+    handleValidationErrors,
+    strict,
+]
