@@ -125,7 +125,11 @@ app.use((req, res, next) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
 	console.error('\x1b[31m', err);
-	res.status(500).send('Something broke!');
+	if (err.isOperational) {
+		res.status(err.statusCode).json({ success: false, message: err.message, error: err });
+	}else{
+		res.status(500).send("Internal Server Error");
+	}
 });
 
 module.exports = app; // Exporting for testing purposes
