@@ -21,3 +21,9 @@ exports.updateSkill = [
    handleValidationErrors,
    strict,
 ]
+
+exports.deleteSkill = [
+   param('id').isInt().withMessage('invalid skill id'),
+   handleValidationErrors,
+   strict,
+]
