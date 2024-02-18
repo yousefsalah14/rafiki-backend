@@ -18,5 +18,10 @@ exports.register = [
    strict,
 ]
 
-// UserName, Password
+exports.login = [
+    body('UserName').isString().isLength({ min: 3, max: 50 }),
+    body('Password').isString().isLength({ min: 8, max: 50 }),
+    handleValidationErrors,
+    strict,
+]
 
