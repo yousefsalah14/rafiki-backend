@@ -1,5 +1,5 @@
 const { body, param } = require('express-validator')
-const { handleValidationErrors, strict } = require('./_common/base.validators')
+const { handleValidationErrors, strict, password } = require('./_common/base.validators')
 
 exports.getAllSessions = [strict]
 
@@ -27,6 +27,13 @@ exports.login = [
 
 exports.sendResetPasswordEmail = [
     body('Email').isEmail(),
+    handleValidationErrors,
+    strict,
+]
+
+exports.changePassword = [
+    param('token').isString(),
+    password(body('Password')),
     handleValidationErrors,
     strict,
 ]
