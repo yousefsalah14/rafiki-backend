@@ -14,3 +14,9 @@ exports.updateUserSkill = [
     handleValidationErrors,
     strict,
 ]
+
+exports.deleteUserSkill = [
+    param('id').isInt().withMessage('invalid user skill id'),
+    handleValidationErrors,
+    strict,
+]
