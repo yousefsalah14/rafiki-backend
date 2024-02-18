@@ -7,3 +7,10 @@ exports.createUserSkill = [
     handleValidationErrors,
     strict,
 ]
+
+exports.updateUserSkill = [
+    param('id').isInt().withMessage('invalid user skill id'),
+    body('Rate').isFloat().withMessage('invalid rate'),
+    handleValidationErrors,
+    strict,
+]
