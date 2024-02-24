@@ -33,5 +33,5 @@ jobs:
         with:
           app-name: 'rafiki-backend'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FFA07F3670194F5EAA26B2619348A677 }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
