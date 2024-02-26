@@ -88,3 +88,14 @@ exports.getJobPosts =[
     handleValidationErrors,
     strict
 ]
+
+exports.postJobApplication =[
+    body('Job_Id')
+        .isInt().withMessage('job id must be an integer'),
+    body('Cover_Letter')
+        //.isString().withMessage('Cover letter must be a string'),
+        .isURL().withMessage('input must be URL'),
+    body('Resume').isURL().withMessage('input must be URL'),
+    handleValidationErrors,
+    strict
+]
