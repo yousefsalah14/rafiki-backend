@@ -101,5 +101,7 @@ exports.postJobApplication =[
 ]
 
 exports.getJobApplicationsByJob = [
-    param('Job_Id').isInt().withMessage('job id must be integer')
+    param('Job_Id').isInt().withMessage('job id must be integer'),
+    handleValidationErrors,
+    strict
 ]
