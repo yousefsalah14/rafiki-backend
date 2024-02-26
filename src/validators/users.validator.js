@@ -35,3 +35,19 @@ exports.addStudent = [
     handleValidationErrors,
     strict
 ]
+
+exports.addHR = [
+    body('UserName')
+        .isString().withMessage('UserName must be a string')
+        .isLength({ min: 3, max: 50 }).withMessage('UserName must be 3-50 characters'),
+    password(body('Password')),
+    body('Email').isEmail().withMessage('invalid email'),
+    body('FirstName')
+        .isString().withMessage('FirstName must be a string')
+        .isLength({ min: 3, max: 50 }).withMessage('FirstName must be 3-50 characters'),
+    body('LastName')
+        .isString().withMessage('LastName must be a string')
+        .isLength({ min: 3, max: 50 }).withMessage('LastName must be 3-50 characters'),
+    handleValidationErrors,
+    strict
+]
