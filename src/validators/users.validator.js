@@ -51,3 +51,13 @@ exports.addHR = [
     handleValidationErrors,
     strict
 ]
+
+exports.addProfessor = [
+    body('UserName')
+        .isString().withMessage('UserName must be a string')
+        .isLength({ min: 3, max: 50 }).withMessage('UserName must be 3-50 characters'),
+    password(body('Password')),
+    body('Email').isEmail().withMessage('invalid email'),
+    handleValidationErrors,
+    strict
+]
