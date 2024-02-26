@@ -74,3 +74,9 @@ exports.addJobPost = [
     handleValidationErrors,
     strict
 ]
+
+exports.getJobPostById = [
+    param('Job_Id').isInt().withMessage('job id must be an integer'),
+    handleValidationErrors,
+    strict
+]
