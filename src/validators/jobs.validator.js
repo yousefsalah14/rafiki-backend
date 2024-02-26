@@ -3,6 +3,7 @@ const {
     handleValidationErrors,
     strict,
 } = require('./_common/base.validators')
+const { query } = require('express')
 
 exports.addJobCategory = [
     body('Job_Category_Name')
@@ -79,4 +80,9 @@ exports.getJobPostById = [
     param('Job_Id').isInt().withMessage('job id must be an integer'),
     handleValidationErrors,
     strict
+]
+
+exports.getJobPosts =[
+    query('page').isInt().withMessage('page number must be an integer'),
+    query('limit').isInt().withMessage('limit must be an integer')
 ]
