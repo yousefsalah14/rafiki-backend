@@ -120,3 +120,9 @@ exports.deleteJobPost = [
     handleValidationErrors,
     strict
 ]
+
+exports.deleteJobCategory = [
+    param('Job_Category_Id').isInt().withMessage('Job Category id must be an integer'),
+    handleValidationErrors,
+    strict
+]
