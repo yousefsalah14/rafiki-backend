@@ -84,5 +84,7 @@ exports.getJobPostById = [
 
 exports.getJobPosts =[
     query('page').isInt().withMessage('page number must be an integer'),
-    query('limit').isInt().withMessage('limit must be an integer')
+    query('limit').isInt().withMessage('limit must be an integer'),
+    handleValidationErrors,
+    strict
 ]
