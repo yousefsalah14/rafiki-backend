@@ -1,9 +1,9 @@
-const { body, param } = require('express-validator')
+const { body, param ,query } = require('express-validator')
 const {
     handleValidationErrors,
     strict,
 } = require('./_common/base.validators')
-const { query } = require('express')
+
 
 exports.addJobCategory = [
     body('Job_Category_Name')
