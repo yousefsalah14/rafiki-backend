@@ -105,3 +105,12 @@ exports.getJobApplicationsByJob = [
     handleValidationErrors,
     strict
 ]
+
+exports.updateJobApplicationStatus =[
+    body('Job_Application_Id')
+        .isInt()
+        .withMessage('Job application id must be an integer'),
+    body('Status').isString().withMessage('Status must be a string'),
+    handleValidationErrors,
+    strict
+]
