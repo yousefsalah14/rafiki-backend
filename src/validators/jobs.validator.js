@@ -114,3 +114,9 @@ exports.updateJobApplicationStatus =[
     handleValidationErrors,
     strict
 ]
+
+exports.deleteJobPost = [
+    param('Job_Id').isInt().withMessage('Job id must be an integer'),
+    handleValidationErrors,
+    strict
+]
