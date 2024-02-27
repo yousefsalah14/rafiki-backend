@@ -71,3 +71,9 @@ exports.checkNationalIdExists = [
     handleValidationErrors,
     strict
 ]
+
+exports.checkEmailExists = [
+    body('Email').isEmail().withMessage('invalid email'),
+    handleValidationErrors,
+    strict
+]
