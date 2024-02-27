@@ -131,3 +131,9 @@ exports.updatePosition = [
     handleValidationErrors,
     strict
 ]
+
+exports.generateCV = [
+    query('Job_Title').isString().withMessage('Job_Title must be a string'),
+    handleValidationErrors,
+    strict
+]
