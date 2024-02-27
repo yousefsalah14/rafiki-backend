@@ -105,3 +105,10 @@ exports.updateAbout = [
     handleValidationErrors,
     strict
 ]
+
+exports.updateCountry = [
+    body('Country')
+        .isString().withMessage('Country must be a string'),
+    handleValidationErrors,
+    strict
+]
