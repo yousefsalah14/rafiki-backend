@@ -11,7 +11,6 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
-const demoValidation = require('./src/middlewares/demoValidation');
 
 db.authenticate()
 	.then(() => {

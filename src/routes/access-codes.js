@@ -2,7 +2,6 @@ const router = require('express').Router();
 const demoCodesController = require('../controllers/demoCodesControllers');
 const { isAdmin } = require('../middlewares/Auth');
 const adminCheck = require('../middlewares/isAdmin');
-const demoValidator = require('../middlewares/demoValidation');
 
 router.post('/access-codes', isAdmin, adminCheck, demoCodesController.createDemoCode);
 router.get('/access-codes/:id', isAdmin, demoCodesController.getDemoCode);
