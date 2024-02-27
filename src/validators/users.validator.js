@@ -85,3 +85,9 @@ exports.checkUserNameExists = [
     handleValidationErrors,
     strict
 ]
+
+exports.checkAcademicIdExists = [
+    body('Academic_Id').isInt().withMessage('Academic Id must be an integer'),
+    handleValidationErrors,
+    strict
+]
