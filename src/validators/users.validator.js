@@ -99,6 +99,12 @@ exports.updatePhone = [
     strict
 ]
 
+exports.uploadProfilePicture = [
+    body('pictureUrl').isURL().withMessage('invalid Url'),
+    handleValidationErrors,
+    strict
+]
+
 exports.updateAbout = [
     body('About')
         .isString().withMessage('About must be a string'),
