@@ -125,6 +125,14 @@ exports.updateCountry = [
     strict
 ]
 
+exports.updateSocialUrls = [
+    body('Behance_URL').isURL().withMessage('invalid Url'),
+    body('LinkedIn_URL').isURL().withMessage('invalid Url'),
+    body('GitHub_URL').isURL().withMessage('invalid Url'),
+    handleValidationErrors,
+    strict
+]
+
 exports.updateName = [
     body('FirstName')
         .isString().withMessage('FirstName must be a string')
