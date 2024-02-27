@@ -112,3 +112,14 @@ exports.updateCountry = [
     handleValidationErrors,
     strict
 ]
+
+exports.updateName = [
+    body('FirstName')
+        .isString().withMessage('FirstName must be a string')
+        .isLength({ min: 3, max: 50 }).withMessage('FirstName must be 3-50 characters'),
+    body('LastName')
+        .isString().withMessage('LastName must be a string')
+        .isLength({ min: 3, max: 50 }).withMessage('LastName must be 3-50 characters'),
+    handleValidationErrors,
+    strict
+]
