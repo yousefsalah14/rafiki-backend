@@ -127,7 +127,7 @@ exports.updateName = [
 
 exports.updatePosition = [
     body('Job_Title')
-        .isString().withMessage('Country must be a string'),
+        .isString().withMessage('Job_Title must be a string'),
     handleValidationErrors,
     strict
 ]
