@@ -77,3 +77,11 @@ exports.checkEmailExists = [
     handleValidationErrors,
     strict
 ]
+
+exports.checkUserNameExists = [
+    body('UserName')
+        .isString().withMessage('UserName must be a string')
+        .isLength({ min: 3, max: 50 }).withMessage('UserName must be 3-50 characters'),
+    handleValidationErrors,
+    strict
+]
