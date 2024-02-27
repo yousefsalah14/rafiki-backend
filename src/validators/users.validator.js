@@ -93,7 +93,7 @@ exports.checkAcademicIdExists = [
 ]
 
 exports.updatePhone = [
-    body('').isInt().withMessage('phone must be integer')
+    body('Phone').isInt().withMessage('phone must be integer')
     .matches('^(01|00201)[0-9]{9}$').withMessage('invalid input'),
     handleValidationErrors,
     strict
