@@ -98,3 +98,10 @@ exports.updatePhone = [
     handleValidationErrors,
     strict
 ]
+
+exports.updateAbout = [
+    body('About')
+        .isString().withMessage('About must be a string'),
+    handleValidationErrors,
+    strict
+]
