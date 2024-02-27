@@ -105,6 +105,12 @@ exports.uploadProfilePicture = [
     strict
 ]
 
+exports.uploadCV = [
+    body('cvUrl').isURL().withMessage('invalid Url'),
+    handleValidationErrors,
+    strict
+]
+
 exports.updateAbout = [
     body('About')
         .isString().withMessage('About must be a string'),
