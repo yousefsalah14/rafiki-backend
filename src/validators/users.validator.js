@@ -123,3 +123,11 @@ exports.updateName = [
     handleValidationErrors,
     strict
 ]
+
+
+exports.updatePosition = [
+    body('Job_Title')
+        .isString().withMessage('Country must be a string'),
+    handleValidationErrors,
+    strict
+]
