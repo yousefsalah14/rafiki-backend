@@ -21,6 +21,11 @@ function checkMissingFields(required) {
   return missing_fields;
 }
 
+function emailValidation(email) {
+	const regexp = /\b[A-Za-z0-9._%+-]+@fci\.helwan\.edu\.eg\b/;
+	return regexp.test(email);
+}
+
 /**
  *
  * @param {Object} req - The request object.
