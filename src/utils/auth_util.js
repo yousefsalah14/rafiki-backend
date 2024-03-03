@@ -14,34 +14,34 @@ const Role = require('../models/Role');
  * @async
  */
 exports.login = async (UserName, Password) => {
-	const user = await User.findOne({
-		where: {
-			UserName,
-		},
-		include: [
-			{
-				model: Role,
-				attributes: ['Role_Name'],
-			},
-		],
-	});
-	if (!user) {
-		throw new Error('User not found');
-	}
-	const isMatch = await bcrypt.compare(Password, user.Password);
-	if (!isMatch) {
-		throw new Error('Invalid credentials');
-	}
-	return user;
+  const user = await User.findOne({
+    where: {
+      UserName,
+    },
+    include: [
+      {
+        model: Role,
+        attributes: ['Role_Name'],
+      },
+    ],
+  });
+  if (!user) {
+    throw new Error('User not found');
+  }
+  const isMatch = await bcrypt.compare(Password, user.Password);
+  if (!isMatch) {
+    throw new Error('Invalid credentials');
+  }
+  return user;
 };
 
 exports.register = async (data) => {
-	const salt = await bcrypt.genSalt(10);
-	const hashedPassword = await bcrypt.hash(data.Password, salt);
-	const user = await User.create({
-		...data,
-		Password: hashedPassword,
-	});
-	user.Password = undefined;
-	return user;
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(data.Password, salt);
+  const user = await User.create({
+    ...data,
+    Password: hashedPassword,
+  });
+  user.Password = undefined;
+  return user;
 };
