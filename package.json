@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "SET NODE_ENV=dev&& nodemon app.js",
-    "test": "mocha src/test --timeout 10000 --exit"
+    "test": "mocha src/test --timeout 10000 --exit",
+    "format": "prettier --write ."
   },
   "author": "Mazin Islam",
   "license": "ISC",
@@ -35,7 +36,8 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "prettier": "^3.2.5"
   },
   "repository": {
     "type": "git",
