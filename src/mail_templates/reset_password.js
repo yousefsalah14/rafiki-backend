@@ -1,5 +1,5 @@
 const HTML_TEMPLATE = (text) => {
-	return `
+  return `
     <!DOCTYPE html>
     <html lang="en">
     
@@ -72,5 +72,5 @@ const HTML_TEMPLATE = (text) => {
 };
 
 module.exports = (text) => {
-	return HTML_TEMPLATE(text);
+  return HTML_TEMPLATE(text);
 };
