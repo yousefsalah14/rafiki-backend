@@ -12,21 +12,21 @@ const Skill = require('../models/Skill');
  * @throws {Error} If there was an error adding the job skills.
  */
 exports.addJobSkills = async (job_skills) => {
-	try {
-		// CHECK IF JOB_SKILLS EXISTS
-		const job_skills_exists = await Job_Skills.findAll({
-			where: { Job_Id: job_skills[0].Job_Id },
-		});
-		if (job_skills_exists.length > 0) {
-			await Job_Skills.destroy({
-				where: { Job_Id: job_skills[0].Job_Id },
-			});
-		}
-		return await Job_Skills.bulkCreate(job_skills);
-	} catch (error) {
-		console.error('Error adding job skill:', error);
-		throw error;
-	}
+  try {
+    // CHECK IF JOB_SKILLS EXISTS
+    const job_skills_exists = await Job_Skills.findAll({
+      where: { Job_Id: job_skills[0].Job_Id },
+    });
+    if (job_skills_exists.length > 0) {
+      await Job_Skills.destroy({
+        where: { Job_Id: job_skills[0].Job_Id },
+      });
+    }
+    return await Job_Skills.bulkCreate(job_skills);
+  } catch (error) {
+    console.error('Error adding job skill:', error);
+    throw error;
+  }
 };
 
 /**
@@ -36,12 +36,12 @@ exports.addJobSkills = async (job_skills) => {
  * @throws {Error} If there was an error adding the job post.
  */
 exports.addJobPost = async (job_post) => {
-	try {
-		return await Job_Post.create(job_post);
-	} catch (error) {
-		console.error('Error adding job post:', error);
-		throw error;
-	}
+  try {
+    return await Job_Post.create(job_post);
+  } catch (error) {
+    console.error('Error adding job post:', error);
+    throw error;
+  }
 };
 
 /**
@@ -51,12 +51,12 @@ exports.addJobPost = async (job_post) => {
  * @throws {Error} If there was an error adding the job type.
  */
 exports.addJobType = async (Job_Category_Name) => {
-	try {
-		return await Job_Category.create({ Job_Category_Name });
-	} catch (error) {
-		console.error('Error adding job type:', error);
-		throw error;
-	}
+  try {
+    return await Job_Category.create({ Job_Category_Name });
+  } catch (error) {
+    console.error('Error adding job type:', error);
+    throw error;
+  }
 };
 
 /**
@@ -66,12 +66,14 @@ exports.addJobType = async (Job_Category_Name) => {
  * @throws {Error} If there was an error retrieving the job type.
  */
 exports.getJobTypeByName = async (Job_Category_name) => {
-	try {
-		return await Job_Category.findOne({ where: { Job_Category_Name: Job_Category_name } });
-	} catch (error) {
-		console.error('Error getting job type by name:', error);
-		throw error;
-	}
+  try {
+    return await Job_Category.findOne({
+      where: { Job_Category_Name: Job_Category_name },
+    });
+  } catch (error) {
+    console.error('Error getting job type by name:', error);
+    throw error;
+  }
 };
 
 /**
@@ -81,12 +83,12 @@ exports.getJobTypeByName = async (Job_Category_name) => {
  * @throws {Error} If there was an error retrieving the job type.
  */
 exports.getJobTypeById = async (Job_Category_Id) => {
-	try {
-		return await Job_Category.findOne({ where: { Job_Category_Id } });
-	} catch (error) {
-		console.error('Error getting job type by id:', error);
-		throw error;
-	}
+  try {
+    return await Job_Category.findOne({ where: { Job_Category_Id } });
+  } catch (error) {
+    console.error('Error getting job type by id:', error);
+    throw error;
+  }
 };
 
 /**
@@ -95,12 +97,12 @@ exports.getJobTypeById = async (Job_Category_Id) => {
  * @throws {Error} If there was an error retrieving the job types.
  */
 exports.getAllJobCategories = async () => {
-	try {
-		return await Job_Category.findAll();
-	} catch (error) {
-		console.error('Error getting all job types:', error);
-		throw error;
-	}
+  try {
+    return await Job_Category.findAll();
+  } catch (error) {
+    console.error('Error getting all job types:', error);
+    throw error;
+  }
 };
 
 /**
@@ -112,62 +114,62 @@ exports.getAllJobCategories = async () => {
  * @throws {Error} If there was an error retrieving the job type.
  */
 exports.getJobPostById = async (Job_Id) => {
-	try {
-		const job_post = await Job_Post.findOne({
-			where: { Job_Id },
-			include: [
-				{
-					model: Job_Skills,
-					attributes: ['Skill_Id'],
-					include: [
-						{
-							model: Skill,
-							attributes: ['Skill_Name'],
-						},
-					],
-				},
-				{
-					model: Job_Category,
-					attributes: ['Job_Category_Name'],
-				},
-			],
-		});
-		return job_post;
-	} catch (error) {
-		console.error('Error getting job post by id:', error);
-		throw error;
-	}
+  try {
+    const job_post = await Job_Post.findOne({
+      where: { Job_Id },
+      include: [
+        {
+          model: Job_Skills,
+          attributes: ['Skill_Id'],
+          include: [
+            {
+              model: Skill,
+              attributes: ['Skill_Name'],
+            },
+          ],
+        },
+        {
+          model: Job_Category,
+          attributes: ['Job_Category_Name'],
+        },
+      ],
+    });
+    return job_post;
+  } catch (error) {
+    console.error('Error getting job post by id:', error);
+    throw error;
+  }
 };
 
 // get job posts by pagination
 exports.getJobPosts = async (page, limit) => {
-	try {
-		const job_posts = await Job_Post.findAll({
-			offset: page * limit,
-			limit,
-			order: [['createdAt', 'DESC']],
-			include: [
-				{
-					model: Job_Skills,
-					attributes: ['Skill_Id'],
-					include: [
-						{
-							model: Skill,
-							attributes: ['Skill_Name'],
-						},
-					],
-				},
-				{
-					model: Job_Category,
-					attributes: ['Job_Category_Name'],
-				},
-			],
-		});
-		return job_posts;
-	} catch (error) {
-		console.error('Error getting job posts:', error);
-		throw error;
-	}
+  try {
+    const job_posts = await Job_Post.findAll({
+      offset: page * limit,
+      limit,
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: Job_Skills,
+          attributes: ['Skill_Id'],
+          include: [
+            {
+              model: Skill,
+              attributes: ['Skill_Name'],
+            },
+          ],
+        },
+        {
+          model: Job_Category,
+          attributes: ['Job_Category_Name'],
+        },
+      ],
+    });
+    return job_posts;
+  } catch (error) {
+    console.error('Error getting job posts:', error);
+    throw error;
+  }
 };
 
 /**
@@ -177,30 +179,30 @@ exports.getJobPosts = async (page, limit) => {
  * @throws {Error} If there was an error retrieving the job posts.
  */
 exports.getJobPostsByJobType = async (Job_Category_Id) => {
-	try {
-		return await Job_Post.findAll({
-			where: { Job_Category_Id },
-			include: [
-				{
-					model: Job_Skills,
-					attributes: ['Skill_Id'],
-					include: [
-						{
-							model: Skill,
-							attributes: ['Skill_Name'],
-						},
-					],
-				},
-				{
-					model: Job_Category,
-					attributes: ['Job_Category_Name'],
-				},
-			],
-		});
-	} catch (error) {
-		console.error('Error getting job posts by job type:', error);
-		throw error;
-	}
+  try {
+    return await Job_Post.findAll({
+      where: { Job_Category_Id },
+      include: [
+        {
+          model: Job_Skills,
+          attributes: ['Skill_Id'],
+          include: [
+            {
+              model: Skill,
+              attributes: ['Skill_Name'],
+            },
+          ],
+        },
+        {
+          model: Job_Category,
+          attributes: ['Job_Category_Name'],
+        },
+      ],
+    });
+  } catch (error) {
+    console.error('Error getting job posts by job type:', error);
+    throw error;
+  }
 };
 
 /**
@@ -214,12 +216,12 @@ exports.getJobPostsByJobType = async (Job_Category_Id) => {
  * @throws {Error} If there was an error adding the job application.
  */
 exports.addJobApplication = async (job_application) => {
-	try {
-		return await Job_Application.create(job_application);
-	} catch (error) {
-		console.error('Error adding job application:', error);
-		throw error;
-	}
+  try {
+    return await Job_Application.create(job_application);
+  } catch (error) {
+    console.error('Error adding job application:', error);
+    throw error;
+  }
 };
 
 /**
@@ -229,19 +231,19 @@ exports.addJobApplication = async (job_application) => {
  * @throws {Error} If there was an error retrieving the job applications.
  */
 exports.getJobApplicationsByUserId = async (Applicant_Id) => {
-	try {
-		return await Job_Application.findAll({
-			where: { Applicant_Id },
-			include: [
-				{
-					model: Job_Post,
-				},
-			],
-		});
-	} catch (error) {
-		console.error('Error getting job applications by user id:', error);
-		throw error;
-	}
+  try {
+    return await Job_Application.findAll({
+      where: { Applicant_Id },
+      include: [
+        {
+          model: Job_Post,
+        },
+      ],
+    });
+  } catch (error) {
+    console.error('Error getting job applications by user id:', error);
+    throw error;
+  }
 };
 
 /**
@@ -251,25 +253,25 @@ exports.getJobApplicationsByUserId = async (Applicant_Id) => {
  * @throws {Error} If there was an error retrieving the job applications.
  */
 exports.getJobApplicationsByJobId = async (Job_Id) => {
-	try {
-		const applications = await Job_Application.findAll({
-			where: { Job_Id },
-			include: [
-				{
-					model: User,
-				},
-			],
-		});
-		// remove the password from the user object
-		const job_applications = applications.map((application) => {
-			const { User: user, ...rest } = application.dataValues;
-			return { ...rest, user: { ...user.dataValues, Password: undefined } };
-		});
-		return job_applications;
-	} catch (error) {
-		console.error('Error getting job applications by job id:', error);
-		throw error;
-	}
+  try {
+    const applications = await Job_Application.findAll({
+      where: { Job_Id },
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
+    // remove the password from the user object
+    const job_applications = applications.map((application) => {
+      const { User: user, ...rest } = application.dataValues;
+      return { ...rest, user: { ...user.dataValues, Password: undefined } };
+    });
+    return job_applications;
+  } catch (error) {
+    console.error('Error getting job applications by job id:', error);
+    throw error;
+  }
 };
 
 /**
@@ -280,12 +282,15 @@ exports.getJobApplicationsByJobId = async (Job_Id) => {
  * @throws {Error} If there was an error updating the job application.
  */
 exports.updateJobApplicationStatus = async (Application_Id, Status) => {
-	try {
-		return await Job_Application.update({ Status }, { where: { Application_Id } });
-	} catch (error) {
-		console.error('Error updating job application status:', error);
-		throw error;
-	}
+  try {
+    return await Job_Application.update(
+      { Status },
+      { where: { Application_Id } },
+    );
+  } catch (error) {
+    console.error('Error updating job application status:', error);
+    throw error;
+  }
 };
 
 /**
@@ -295,12 +300,12 @@ exports.updateJobApplicationStatus = async (Application_Id, Status) => {
  * @throws {Error} If there was an error deleting the job post.
  */
 exports.deleteJobPost = async (Job_Id) => {
-	try {
-		return await Job_Post.destroy({ where: { Job_Id } });
-	} catch (error) {
-		console.error('Error deleting job post:', error);
-		throw error;
-	}
+  try {
+    return await Job_Post.destroy({ where: { Job_Id } });
+  } catch (error) {
+    console.error('Error deleting job post:', error);
+    throw error;
+  }
 };
 
 /**
@@ -310,10 +315,10 @@ exports.deleteJobPost = async (Job_Id) => {
  * @throws {Error} If there was an error deleting the job category.
  */
 exports.deleteJobCategory = async (Job_Category_Id) => {
-	try {
-		return await Job_Category.destroy({ where: { Job_Category_Id } });
-	} catch (error) {
-		console.error('Error deleting job category:', error);
-		throw error;
-	}
+  try {
+    return await Job_Category.destroy({ where: { Job_Category_Id } });
+  } catch (error) {
+    console.error('Error deleting job category:', error);
+    throw error;
+  }
 };

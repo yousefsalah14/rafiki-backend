@@ -6,9 +6,18 @@ router.get('/', isAuthorized, skillsController.getSkills);
 
 router.post('/', isAuthorized, validator.addSkill, skillsController.addSkill);
 
-router.put('/:id', isAdmin, validator.updateSkill, skillsController.updateSkill);
+router.put(
+  '/:id',
+  isAdmin,
+  validator.updateSkill,
+  skillsController.updateSkill,
+);
 
-router.delete('/:id', isAdmin, validator.deleteSkill, skillsController.deleteSkill);
-
+router.delete(
+  '/:id',
+  isAdmin,
+  validator.deleteSkill,
+  skillsController.deleteSkill,
+);
 
 module.exports = router;

@@ -5,8 +5,16 @@ const validator = require('../validators/auth.validators');
 
 router.post('/register', validator.register, authController.register);
 router.post('/login', validator.login, authController.login);
-router.get('/status',isAuthorized, authController.isLoggedIn);
+router.get('/status', isAuthorized, authController.isLoggedIn);
 router.get('/logout', isAuthorized, authController.logout);
-router.post('/reset_password', validator.sendResetPasswordEmail, authController.sendResetPasswordEmail);
-router.post('/reset_password/:token', validator.changePassword, authController.changePassword);
+router.post(
+  '/reset_password',
+  validator.sendResetPasswordEmail,
+  authController.sendResetPasswordEmail,
+);
+router.post(
+  '/reset_password/:token',
+  validator.changePassword,
+  authController.changePassword,
+);
 module.exports = router;
